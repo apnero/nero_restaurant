@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class User {
   const User(
@@ -8,7 +10,8 @@ class User {
         this.email,
         this.displayName,
         this.admin,
-        this.pushToken});
+        this.pushToken,
+      this.points,});
 
   final String email;
   final String id;
@@ -16,15 +19,32 @@ class User {
   final String displayName;
   final bool admin;
   final String pushToken;
+  final double points;
 
   factory User.fromDocument(DocumentSnapshot document) {
     return new User(
       email: document['email'],
       photoUrl: document['photoUrl'],
-      id: document.documentID,
+      id: document['id'],
       displayName: document['displayName'],
       admin: document['admin'],
       pushToken: document['pushToken'],
+      points: double.parse(document['points'].toString()),
+    );
+  }
+
+  //for first run after creating id
+  factory User.fromFirebaseUser(FirebaseUser user) {
+    return new User(
+      email: user.email,
+      photoUrl: user.photoUrl,
+      id: user.uid,
+      displayName: user.displayName,
+      admin: false,
+      pushToken: '',
+      points: 0.0,
     );
   }
 }
+
+

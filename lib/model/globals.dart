@@ -1,0 +1,11 @@
+library nero_restaurant.globals;
+
+import 'package:nero_restaurant/model/item_model.dart';
+import 'package:nero_restaurant/model/category_model.dart';
+import 'package:nero_restaurant/model/user_model.dart';
+
+List<Item> allItems;
+List<Category> allCategories;
+Map<String,List<String>> allOptions;
+User currentUser;
+List<String> currentCart = [];

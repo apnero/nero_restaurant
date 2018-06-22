@@ -40,3 +40,10 @@ final mainTheme = new ThemeData(
   primaryColor: Colors.teal,
   accentColor: Colors.cyan[600],
 );
+
+
+final rewardRowText = const TextStyle(
+color: Colors.white70,
+fontSize: 14.0,
+fontFamily: 'Dosis',
+fontWeight: FontWeight.w700,);

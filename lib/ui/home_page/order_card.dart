@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 
 class OrderCard extends StatelessWidget {
 
@@ -26,7 +27,12 @@ class OrderCard extends StatelessWidget {
                   color: Colors.white,
                   child: const Text('ORDER'),
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/main-order-page');
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (context) => new MainOrderPage(),
+                      ),
+                    );
                   },
                 ),
               ],

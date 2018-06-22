@@ -1,75 +1,112 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum Status { open, working, complete }
+
 class Selection {
-//  const Selection({
-//    this.name,
-//    this.description,
-//    this.url,
-//    this.options,
-//    this.choices,
-//  });
-
-  String name;
-  String description;
-  String url;
-  String docRef;
-  Map<String, List<String>> options;
-  List<String> choices;
+  String uid;
+  String itemDocId;
+  String selectionId;
+  Map<String, List<String>> choices;
+  bool favorite;
+  bool inCart;
+  Status status;
   String specialInstructions;
+  DateTime date;
 
-//
-//  factory Selection.fromJson(Map<String, dynamic> json) {
-//    return new Selection(
-//      name: json['name'],
-//      description: json['description'],
-//      url: json['url'],
-//      options: json['options'][0],
-//      choices: null,
-//    );
-//  }
-
-  Selection(Map<String, dynamic> json) {
-    name = json['name'];
-    description = json['description'];
-    url = json['url'];
-    specialInstructions = json['specialInstructions'];
-    docRef = json['docRef'];
-
-    final Iterable<String> keys = json['options'][0].keys;
-    options = new Map<String, List<String>>.fromIterables(keys,
-        keys.map((key) => new List<String>.from(json['options'][0][key])));
-
-    choices = [];
-    final List<dynamic> list = json['choices'];
-    list.forEach((choice) {
-      if (choice != 'empty') choices.add(choice);
-    });
+  Selection.fromItemDoc(DocumentSnapshot document) {
+    this.uid = '';
+    this.itemDocId = document['docId'];
+    this.selectionId = '';
+    this.choices = new Map<String, List<String>>();
+    this.favorite = false;
+    this.inCart = false;
+    this.status = Status.open;
+    this.specialInstructions = '';
+    this.date = new DateTime.now();
   }
+
+  Selection.fromItemId(String docId) {
+    this.uid = '';
+    this.itemDocId = docId;
+    this.selectionId = '';
+    this.choices = new Map<String, List<String>>();
+    this.favorite = false;
+    this.inCart = false;
+    this.status = Status.open;
+    this.specialInstructions = '';
+    this.date = new DateTime.now();
+  }
+
+
+  Selection.fromSelectionDoc(DocumentSnapshot document) {
+    this.uid = document['uid'];
+    this.itemDocId = document['itemDocId'];
+    this.selectionId = document['selectionId'];
+    this.choices = dynamicToString(document['choices']);
+    this.favorite = document['favorite'];
+    this.inCart = document['inCart'];
+    this.status = stringToEnum(document['status']);
+    this.specialInstructions = document['specialInstructions'];
+    this.date = document['date'];
+  }
+
+
   Map<String, dynamic> toMap() => {
-        'name': this.name,
-        'description': this.description,
-        'url': this.url,
-        'options': this.options,
+        'uid': this.uid,
+        'itemDocId': this.itemDocId,
+        'selectionId': this.selectionId,
         'choices': this.choices,
+        'favorite': this.favorite,
+        'inCart': this.inCart,
+        'status': enumToString(this.status),
         'specialInstructions': this.specialInstructions,
+        'date': this.date,
       };
-}
 
-class SubCategory {
-  String name;
-  List<Selection> selections;
-
-  SubCategory(Map<String, dynamic> json) {
-    name = json['subCategory'];
-    selections = _buildSelectionList(json['items']);
+  String enumToString(Status status) {
+    String string = '';
+    switch (status) {
+      case Status.open:
+        return 'open';
+        break;
+      case Status.working:
+        return 'working';
+        break;
+      case Status.complete:
+        return 'complete';
+        break;
+      default:
+        return string;
+    }
   }
 
-  List<Selection> _buildSelectionList(List items) {
-    List<Selection> sel = [];
+  Status stringToEnum(String stringStatus) {
 
-    items.forEach((item) {
-      sel.add(Selection(item));
+    switch (stringStatus) {
+      case 'open':
+        return Status.open;
+        break;
+      case 'working':
+        return Status.working;
+        break;
+      case 'complete':
+        return Status.complete;
+        break;
+      default:
+        return Status.open;
+    }
+  }
+
+  Map<String,List<String>> dynamicToString(Map<dynamic,dynamic> map){
+
+    Map<String, List<String>> stringMap = new Map();
+    List<dynamic> list;
+
+    map.forEach((k, v) {
+      list = v.cast<String>().toList();
+      stringMap.addAll({k: list});
     });
-    return sel;
+
+    return stringMap;
   }
 }

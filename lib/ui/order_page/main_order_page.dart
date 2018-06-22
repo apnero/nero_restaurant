@@ -3,9 +3,9 @@ import 'package:nero_restaurant/ui/order_page/favorites_tab.dart';
 import 'package:nero_restaurant/ui/order_page/featured_tab.dart';
 import 'package:nero_restaurant/ui/order_page/menu_tab.dart';
 import 'package:nero_restaurant/ui/order_page/previous_tab.dart';
-import 'package:nero_restaurant/ui/style.dart';
-
+import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
 class MainOrderPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return new DefaultTabController(
@@ -34,15 +34,16 @@ class MainOrderPage extends StatelessWidget {
           hasNotch: false,
           child: new Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-                IconButton(
                   icon: Icon(Icons.shopping_cart),
-                  onPressed: ()  => Navigator.of(context).pushNamed('/shopping-cart-page'),
+                  onPressed: ()  {   Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => new ShoppingCartPage(),
+                    ),
+                  );}
                 ),
               ]),
         ),

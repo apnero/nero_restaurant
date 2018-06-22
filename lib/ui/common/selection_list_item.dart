@@ -1,162 +1,181 @@
+import 'package:nero_restaurant/model/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:nero_restaurant/model/item_model.dart';
+import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/style.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-
-final refFavorites = Firestore.instance.collection('Favorites');
-final refCarts = Firestore.instance.collection('Carts');
 
 class SelectionListItem extends StatefulWidget {
   final BuildContext context;
   final Selection selection;
+  final bool fromShoppingPage;
 
-  SelectionListItem({@required this.context, @required this.selection});
+  SelectionListItem(
+      {@required this.context,
+      @required this.selection,
+      @required this.fromShoppingPage});
   @override
   _SelectionListItem createState() => new _SelectionListItem();
 }
 
 class _SelectionListItem extends State<SelectionListItem> {
-  bool _isFavorite = true;
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  void _removeFromFavorites() {
-    if (_isFavorite == true) {
-      Firestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot favoriteRecord =
-            await refFavorites.document(widget.selection.docRef).get();
-        await transaction.delete(favoriteRecord.reference);
-      });
+  _addToFavorites() {
+    if (widget.selection.favorite == false) {
+      Scaffold
+          .of(context)
+          .showSnackBar(new SnackBar(content: new Text("Added to Favorites")));
+      widget.selection.favorite = true;
+      modifySelection(widget.selection);
+    } else {
+      Scaffold.of(context).showSnackBar(
+          new SnackBar(content: new Text("Removed from Favorites")));
+      widget.selection.favorite = false;
+      modifySelection(widget.selection);
     }
 
-    try {
-      setState(() {
-        setState(() {
-          _isFavorite = false;
-        });
-      });
-    } catch (exception) {
-      print('Error setState on Selection List');
-    }
-
-    Scaffold
-        .of(context)
-        .showSnackBar(new SnackBar(content: new Text("Removed from Favorites")));
+    setState(() {});
   }
 
   _addToCart() {
+    Scaffold
+        .of(context)
+        .showSnackBar(new SnackBar(content: new Text("Added to Cart")));
 
-      Scaffold
-          .of(context)
-          .showSnackBar(new SnackBar(content: new Text("Added to Cart")));
+    //if already in cart make copy
+    if (widget.selection.inCart) {
+      widget.selection.favorite = false;
+      widget.selection.selectionId = '';
+    }
 
-      Firestore.instance.runTransaction((transaction) async {
-        FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+    widget.selection.inCart = true;
+    modifySelection(widget.selection);
 
-        final DocumentSnapshot newDoc =
-        await transaction.get(refCarts.document());
-        final Map<String, dynamic> data =
-        _toMap(widget.selection, firebaseUser, newDoc.documentID);
-        await transaction.set(newDoc.reference, data);
-      });
-
-    setState(() {
-//      _favorited = !_favorited;
-    });
+    setState(() {});
   }
 
-  Map<String, dynamic> _toMap(
-      Selection item, FirebaseUser user, String docRef) {
-    final Map<String, dynamic> result = {};
+  _removeFromCart() {
+    Scaffold
+        .of(context)
+        .showSnackBar(new SnackBar(content: new Text("Removed From Cart")));
+    widget.selection.inCart = false;
+    modifySelection(widget.selection);
+  }
 
-    result.addAll(item.toMap());
-    result['uid'] = user.uid;
-    result['docRef'] = docRef;
-    result['status'] = "Pending";
-    return result;
+  List<String> mapToOneList(Map<String, List<String>> map) {
+    List<String> newList = [];
+    map.forEach((k, v) => newList.addAll(v));
+    return newList;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 6.0,
-          vertical: 3.0,
-        ),
+    widget.fromShoppingPage ? globals.currentCart.add(widget.selection.selectionId):null;
+    return Card(
+        shape: const RoundedRectangleBorder(
+            borderRadius: const BorderRadius.only(
+          topLeft: const Radius.circular(16.0),
+          topRight: const Radius.circular(16.0),
+          bottomLeft: const Radius.circular(16.0),
+          bottomRight: const Radius.circular(16.0),
+        )),
         child: new InkWell(
             onTap: () {
               Navigator.push(
                 context,
                 new MaterialPageRoute(
-                  builder: (context) => new MyApp(selection: widget.selection),
+                  builder: (context) => new ItemPage(selection: widget.selection),
                 ),
               );
             },
             child: new Hero(
-                tag: widget.selection.name,
+                tag: widget.selection.hashCode.toString(),
                 child: Container(
+                    padding: EdgeInsets.all(10.0),
                     child: new Column(children: <Widget>[
-                  new Row(children: <Widget>[
-                    new Container(
-                        width: 80.0,
-                        height: 80.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image: new CachedNetworkImageProvider(
-                                    widget.selection.url)))),
-                    new Container(
-                        height: 120.0,
-                        padding: const EdgeInsets.only(left: 20.0, top: 5.0),
-                        child: new Row(children: <Widget>[
-                          new Padding(
-                              padding:
-                                  new EdgeInsets.only(left: 7.0, right: 20.0),
-                              child: new Text(widget.selection.name)),
-                          new Column(
-                            children:
-                                widget.selection.choices.map((String string) {
-                              return new Wrap(
-                                children: [
-                                  new Padding(
-                                    padding:
-                                        new EdgeInsets.symmetric(vertical: 3.0),
-                                    child: new FilterChip(
-                                      labelPadding: new EdgeInsets.symmetric(
-                                          horizontal: 5.0),
-                                      backgroundColor: Colors.lightGreenAccent,
-                                      onSelected: null,
-                                      selectedColor: Colors.blue,
-                                      label: new Text(string),
-                                      selected: true,
-                                    ),
-                                  )
-                                ],
-                              );
-                            }).toList(),
-                          )
-                        ])),
-                  ]),
-                  new Container(
-                      padding: EdgeInsets.only(
-                        left: 150.0,
-                      ),
-                      child: new Row(children: <Widget>[
-                        new InkWell(
-                            onTap: () {
-                              _removeFromFavorites();
-                            },
-                            child: _isFavorite == true
-                                ? Icon(Icons.favorite)
-                                : Icon(Icons.favorite_border)),
-                        new InkWell(
-                            onTap: () {_addToCart();},
-                            child: new Icon(Icons.add_circle_outline)),
-                      ])),
-                  new Divider(height: 25.0),
-                ])))));
+                      new Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+
+                        new Container(
+                            width: 80.0,
+                            height: 80.0,
+                            decoration: new BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: new DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: new CachedNetworkImageProvider(
+                                        getItemFromDocId(
+                                                widget.selection.itemDocId)
+                                            .url)))),
+                        new Container(
+                            height: 120.0,
+                            padding:
+                                const EdgeInsets.only(top: 5.0),
+                            child: new Row(children: <Widget>[
+                              new Padding(
+                                  padding: new EdgeInsets.only(
+                                      left: 7.0, right: 20.0),
+                                  child: new Text(getItemFromDocId(
+                                          widget.selection.itemDocId)
+                                      .name)),
+                              new Column(
+                                children: mapToOneList(widget.selection.choices)
+                                    .map((String string) {
+                                  return new Wrap(
+                                    children: [
+                                      new Padding(
+                                        padding: new EdgeInsets.symmetric(
+                                            vertical: 3.0),
+                                        child: new FilterChip(
+                                          labelPadding:
+                                              new EdgeInsets.symmetric(
+                                                  horizontal: 5.0),
+                                          backgroundColor:
+                                              Colors.lightGreenAccent,
+                                          onSelected: null,
+                                          selectedColor: Colors.blue,
+                                          label: new Text(string),
+                                          selected: true,
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }).toList(),
+                              )
+                            ])),
+                      ]),
+                      new Container(
+                          padding: EdgeInsets.only(
+                            left: 140.0,
+                          ),
+                          child: new Row(children: <Widget>[
+                            new InkWell(
+                                onTap: () {
+                                  _addToFavorites();
+                                },
+                                child: widget.selection.favorite == true
+                                    ? Icon(Icons.favorite,size:40.0,)
+                                    : Icon(Icons.favorite_border,size:40.0,)),
+                            new InkWell(
+                                onTap: () {
+                                  _addToCart();
+                                },
+                                child: new Icon(Icons.add_circle_outline,size:40.0,)),
+                            widget.fromShoppingPage
+                                ? new InkWell(
+                                    onTap: () {
+                                      _removeFromCart();
+                                    },
+                                    child:
+                                        new Icon(Icons.remove_circle_outline,size:40.0,))
+                                : new Container(),
+                          ])),
+                    ])))));
   }
 }

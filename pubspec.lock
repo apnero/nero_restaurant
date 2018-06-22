@@ -105,7 +105,7 @@ packages:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -118,6 +118,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  flutter_circular_chart:
+    dependency: "direct main"
+    description:
+      name: flutter_circular_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   flutter_fab_dialer:
     dependency: "direct main"
     description:
@@ -125,6 +132,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.5"
+  flutter_facebook_login:
+    dependency: transitive
+    description:
+      name: flutter_facebook_login
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
+  flutter_firebase_ui:
+    dependency: "direct main"
+    description:
+      name: flutter_firebase_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -145,7 +166,7 @@ packages:
     source: hosted
     version: "1.1.5"
   google_sign_in:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_sign_in
       url: "https://pub.dartlang.org"
@@ -359,6 +380,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_fab:
+    dependency: "direct main"
+    description:
+      name: sliver_fab
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -472,5 +500,5 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=2.0.0-dev.52.0 <=2.0.0-dev.54.0.flutter-46ab040e58"
+  dart: ">=2.0.0-dev.52.0 <=2.0.0-dev.58.0.flutter-f981f09760"
   flutter: ">=0.2.4 <2.0.0"

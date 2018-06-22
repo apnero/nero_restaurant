@@ -3,50 +3,66 @@ import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/ui/style.dart';
+import 'package:nero_restaurant/model/item_model.dart';
 
-class HorizontalListItem extends StatelessWidget {
+
+class HorizontalListItem extends StatefulWidget {
   final BuildContext context;
   final Selection selection;
 
-  // Constructor. {} here denote that they are optional values i.e you can use as: new MyCard()
   HorizontalListItem({@required this.context, @required this.selection});
+  @override
+  _HorizontalListItem createState() => new _HorizontalListItem();
+}
+
+class _HorizontalListItem extends State<HorizontalListItem> {
+  bool _favorited;
+
+  Item thisItem;
+
+
+  @override
+  void initState() {
+    thisItem = getItemFromDocId(widget.selection.itemDocId);
+    _favorited = widget.selection.favorite;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 6.0,
-          vertical: 3.0,
-        ),
+    return Container(
         child: new InkWell(
             onTap: () {
               Navigator.push(
                 context,
                 new MaterialPageRoute(
-                  builder: (context) => new MyApp(selection: selection),
+                  builder: (context) => new ItemPage(selection: widget.selection),
                 ),
               );
             },
             child: new Hero(
-                tag: selection.name,
+                tag: widget.selection.hashCode.toString(),
                 child: Container(
+                    padding: const EdgeInsets.only(right: 20.0),
                     child: new Column(children: <Widget>[
-                  new Container(
-//                          padding: const EdgeInsets.only(bottom: 20.0),
-                      width: 120.0,
-                      height: 120.0,
-                      decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: new DecorationImage(
-                              fit: BoxFit.fill,
-                              image: new CachedNetworkImageProvider(
-                                  selection.url)))),
-                  new Container(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    width: 150.0,
-                    child:
-                            new Text(selection.name, style: subMenuTextLabel, textAlign: TextAlign.center,),
-                  )
-                ])))));
+                      new Container(
+                          width: 120.0,
+                          height: 120.0,
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: new CachedNetworkImageProvider(
+                                      thisItem.url)))),
+                      new Container(
+                        width: 120.0,
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: new Text(
+                          thisItem.name,
+                          style: subMenuTextLabel,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ])))));
   }
 }

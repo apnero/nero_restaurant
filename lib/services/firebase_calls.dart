@@ -77,7 +77,7 @@ void modifySelection(Selection selection) {
   });
 }
 
-sendOrder() {
+void sendOrder() {
   Map<String, dynamic> map = new Map();
   map.addAll({'status': 'working'});
   map.addAll({'date': DateTime.now()});
@@ -89,7 +89,7 @@ sendOrder() {
 
     final DocumentReference document = refSent.document();
     document.setData(<String, dynamic>{
-      'uid': globals.currentUser.id,
+      'name': globals.currentUser.displayName,
       'pushToken': globals.currentUser.pushToken
     });
   });

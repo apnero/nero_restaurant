@@ -19,12 +19,15 @@ class ChipsTile extends StatefulWidget {
 class _ChipsTileState extends State<ChipsTile> {
   String _chipType;
   String _labelString;
+  int initialReq = 1;
 
   @override
   void initState() {
     if (widget.label.split != "") {
-      _labelString = widget.label.split('-')[0];
-      _chipType = widget.label.split('-')[1];
+      _labelString = widget.label.split('_')[0];
+      _chipType = widget.label.split('_')[1];
+      if (_chipType == 'req')
+        initialReq = 0;
     }
     super.initState();
   }
@@ -33,14 +36,14 @@ class _ChipsTileState extends State<ChipsTile> {
     List<String> list = new List();
 
     if (selected == true) {
-      if (widget.choices.containsKey(widget.label)) if (_chipType == 'one')
+      if (widget.choices.containsKey(widget.label)) if (_chipType == 'one' || _chipType == 'req')
         widget.choices.remove(widget.label);
       else if (_chipType == 'many') list.addAll(widget.choices[widget.label]);
 
       list.add(choice);
       widget.choices.addAll({widget.label: list});
     } else if (widget.choices.containsKey(widget.label) ==
-        true) if (_chipType == 'one')
+        true) if (_chipType == 'one')// || _chipType == 'req')
       widget.choices.remove(widget.label);
     else if (_chipType == 'many') {
       list = widget.choices[widget.label];
@@ -71,7 +74,7 @@ class _ChipsTileState extends State<ChipsTile> {
                       backgroundColor: Colors.blue,
                       selectedColor: Colors.red,
                       label: new Text(widget.values[index]),
-                      selected: (widget.choices.containsKey(widget.label) &&
+                      selected: initialReq+index == 0 || (widget.choices.containsKey(widget.label) &&
                           widget.choices[widget.label]
                               .contains(widget.values[index])),
                       onSelected: (bool selected) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
+import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 
 class AnimatedFab extends StatefulWidget {
   final Selection selection;
@@ -21,7 +22,7 @@ class _AnimatedFabState extends State<AnimatedFab>
 
   final double expandedSize = 180.0;
   final double hiddenSize = 20.0;
-  bool fav=false;
+  bool fav = false;
 
   @override
   void initState() {
@@ -51,9 +52,10 @@ class _AnimatedFabState extends State<AnimatedFab>
             children: <Widget>[
               _buildExpandedBackground(),
               _buildFavoriteOption(0.0, _onFavoriteClick),
-              _buildOption(Icons.add_shopping_cart, -math.pi / 2, _onAddToCartClick),
-              _buildOption(Icons.payment, -2 * math.pi / 2, _onGoToCartClick),
-             // _buildOption(Icons.error_outline, math.pi),
+              _buildOption(
+                  Icons.add_shopping_cart, -math.pi / 3, _onAddToCartClick),
+              _buildOption(Icons.payment, -2 * math.pi / 3, _onGoToCartClick),
+              _buildOption(Icons.restaurant_menu, math.pi, _onGoToMenu),
               _buildFabCore(),
             ],
           );
@@ -76,12 +78,11 @@ class _AnimatedFabState extends State<AnimatedFab>
           child: new IconButton(
             onPressed: action,
             icon: new Transform.rotate(
-              angle: -angle,
-              child: new Icon(
-                icon,
-                color: Colors.white,
-              )
-            ),
+                angle: -angle,
+                child: new Icon(
+                  icon,
+                  color: Colors.white,
+                )),
             iconSize: iconSize,
             alignment: Alignment.center,
             padding: new EdgeInsets.all(0.0),
@@ -90,7 +91,6 @@ class _AnimatedFabState extends State<AnimatedFab>
       ),
     );
   }
-
 
   Widget _buildFavoriteOption(double angle, Function action) {
     double iconSize = 0.0;
@@ -107,14 +107,15 @@ class _AnimatedFabState extends State<AnimatedFab>
             onPressed: action,
             icon: new Transform.rotate(
                 angle: -angle,
-                child: fav ? new Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                ):new Icon(
-                  Icons.favorite_border,
-                  color: Colors.white,
-                )
-            ),
+                child: fav
+                    ? new Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      )
+                    : new Icon(
+                        Icons.favorite_border,
+                        color: Colors.white,
+                      )),
             iconSize: iconSize,
             alignment: Alignment.center,
             padding: new EdgeInsets.all(0.0),
@@ -175,15 +176,16 @@ class _AnimatedFabState extends State<AnimatedFab>
     String snackBarText = '';
     fav = !fav;
 
-    if(fav == true)
+    if (fav == true)
       snackBarText = 'Added Item To Favorites!';
-    else snackBarText = 'Removed Item From Favorites!';
+    else
+      snackBarText = 'Removed Item From Favorites!';
 
-    Scaffold.of(context).showSnackBar(
-        new SnackBar(content: new Text(snackBarText)));
+    Scaffold
+        .of(context)
+        .showSnackBar(new SnackBar(content: new Text(snackBarText)));
 
-
-    if (fav == false) {
+    if (fav == true) {
       widget.selection.favorite = true;
       modifySelection(widget.selection);
     } else {
@@ -191,9 +193,9 @@ class _AnimatedFabState extends State<AnimatedFab>
       modifySelection(widget.selection);
     }
 
-
     close();
   }
+
   _onAddToCartClick() {
     Scaffold.of(context).showSnackBar(
         new SnackBar(content: new Text("Item Had Been Added To The Cart!")));
@@ -202,14 +204,26 @@ class _AnimatedFabState extends State<AnimatedFab>
     modifySelection(widget.selection);
     close();
   }
+
   _onGoToCartClick() {
     Navigator.pop(context);
     Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (context) => new ShoppingCartPage(),
-                    ),
-                  );
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new ShoppingCartPage(),
+      ),
+    );
+    close();
+  }
+
+  _onGoToMenu() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+        builder: (context) => new MainOrderPage(),
+      ),
+    );
     close();
   }
 }

@@ -74,9 +74,119 @@ class _SelectionListItem extends State<SelectionListItem> {
     return newList;
   }
 
+  List<String> _getList(Iterable<List<String>> list) {
+    List<String> outputList = [];
+
+    list.forEach((l) => outputList.addAll(l));
+
+    return outputList;
+  }
+
+  Widget _actionRow(BuildContext context) {
+    return new Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+      new InkWell(
+          onTap: () {
+            _addToFavorites();
+          },
+          child: widget.selection.favorite == true
+              ? Icon(
+                  Icons.favorite,
+                  size: 35.0,
+                )
+              : Icon(
+                  Icons.favorite_border,
+                  size: 35.0,
+                )),
+      new InkWell(
+          onTap: () {
+            _addToCart();
+          },
+          child: new Icon(
+            Icons.add_circle_outline,
+            size: 35.0,
+          )),
+      widget.fromShoppingPage
+          ? new InkWell(
+              onTap: () {
+                _removeFromCart();
+              },
+              child: new Icon(
+                Icons.remove_circle_outline,
+                size: 35.0,
+              ))
+          : new Container(),
+    ]);
+  }
+
+  Widget _image(BuildContext context) {
+    return new Container(
+        width: 80.0,
+        height: 80.0,
+        decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            image: new DecorationImage(
+                fit: BoxFit.fill,
+                image: new CachedNetworkImageProvider(
+                    getItemFromDocId(widget.selection.itemDocId).url))));
+  }
+
+  Widget _title(BuildContext context) {
+    return new Padding(
+        padding: new EdgeInsets.only(bottom: 10.0, top:5.0,),
+        child: new Text(getItemFromDocId(widget.selection.itemDocId).name,
+          style: Theme.of(context).textTheme.headline,));
+  }
+
+  Widget _chips(BuildContext context) {
+    return new Wrap(
+      direction: Axis.horizontal,
+      spacing: 5.0, // gap between adjacent chips
+      runSpacing: 2.0,
+      children: _getList(widget.selection.choices.values)
+          .map<Widget>((String choice) {
+        return new ChoiceChip(
+          backgroundColor: Colors.blue,
+          label: new Text(
+            choice,
+            style: Theme.of(context).textTheme.subhead,
+          ),
+          selected: false,
+          onSelected: (bool selected) => null,
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _structure(BuildContext context) {
+    return Container(
+        height: 205.0,
+        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+              _image(context),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                _title(context),
+                Container(
+                  height: 110.0,
+                  width: 300.0,
+                child: _chips(context),
+                ),
+              ]),
+            ]),
+            Container(padding: EdgeInsets.only(bottom: 5.0,), child:_actionRow(context),
+            )],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    widget.fromShoppingPage ? globals.currentCart.add(widget.selection.selectionId):null;
+    widget.fromShoppingPage
+        ? globals.currentCart.add(widget.selection.selectionId)
+        : null;
     return Card(
         shape: const RoundedRectangleBorder(
             borderRadius: const BorderRadius.only(
@@ -90,92 +200,13 @@ class _SelectionListItem extends State<SelectionListItem> {
               Navigator.push(
                 context,
                 new MaterialPageRoute(
-                  builder: (context) => new ItemPage(selection: widget.selection),
+                  builder: (context) =>
+                      new ItemPage(selection: widget.selection),
                 ),
               );
             },
             child: new Hero(
                 tag: widget.selection.hashCode.toString(),
-                child: Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: new Column(children: <Widget>[
-                      new Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-
-                        new Container(
-                            width: 80.0,
-                            height: 80.0,
-                            decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: new DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: new CachedNetworkImageProvider(
-                                        getItemFromDocId(
-                                                widget.selection.itemDocId)
-                                            .url)))),
-                        new Container(
-                            height: 120.0,
-                            padding:
-                                const EdgeInsets.only(top: 5.0),
-                            child: new Row(children: <Widget>[
-                              new Padding(
-                                  padding: new EdgeInsets.only(
-                                      left: 7.0, right: 20.0),
-                                  child: new Text(getItemFromDocId(
-                                          widget.selection.itemDocId)
-                                      .name)),
-                              new Column(
-                                children: mapToOneList(widget.selection.choices)
-                                    .map((String string) {
-                                  return new Wrap(
-                                    children: [
-                                      new Padding(
-                                        padding: new EdgeInsets.symmetric(
-                                            vertical: 3.0),
-                                        child: new FilterChip(
-                                          labelPadding:
-                                              new EdgeInsets.symmetric(
-                                                  horizontal: 5.0),
-                                          backgroundColor:
-                                              Colors.lightGreenAccent,
-                                          onSelected: null,
-                                          selectedColor: Colors.blue,
-                                          label: new Text(string),
-                                          selected: true,
-                                        ),
-                                      )
-                                    ],
-                                  );
-                                }).toList(),
-                              )
-                            ])),
-                      ]),
-                      new Container(
-                          padding: EdgeInsets.only(
-                            left: 140.0,
-                          ),
-                          child: new Row(children: <Widget>[
-                            new InkWell(
-                                onTap: () {
-                                  _addToFavorites();
-                                },
-                                child: widget.selection.favorite == true
-                                    ? Icon(Icons.favorite,size:40.0,)
-                                    : Icon(Icons.favorite_border,size:40.0,)),
-                            new InkWell(
-                                onTap: () {
-                                  _addToCart();
-                                },
-                                child: new Icon(Icons.add_circle_outline,size:40.0,)),
-                            widget.fromShoppingPage
-                                ? new InkWell(
-                                    onTap: () {
-                                      _removeFromCart();
-                                    },
-                                    child:
-                                        new Icon(Icons.remove_circle_outline,size:40.0,))
-                                : new Container(),
-                          ])),
-                    ])))));
+                child: _structure(context))));
   }
 }

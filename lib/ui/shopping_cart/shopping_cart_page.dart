@@ -9,15 +9,7 @@ import 'package:nero_restaurant/ui/home_page/home_page.dart';
 final refSelections = Firestore.instance.collection('Selections');
 
 class ShoppingCartPage extends StatelessWidget {
-//  bool _isShoppingCartBusy() {
-//    if (globals.lastOrder != null &&
-//        globals.lastOrder.difference(DateTime.now()) > Duration(minutes: -2)) {
-//      print('Diff: ' + globals.lastOrder.difference(DateTime.now()).toString());
-//      print('dur: ' + Duration(minutes: -2).toString());
-//      return true;
-//    }
-//    return false;
-//  }
+
 
   _messageDialog(BuildContext context) {
     return showDialog<Null>(
@@ -119,14 +111,13 @@ class ShoppingCartPage extends StatelessWidget {
                         fromShoppingPage: true,
                       ));
             }),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: new Builder(builder: (BuildContext context) {
-          return new FloatingActionButton.extended(
+          return new FloatingActionButton(
               key: new ValueKey<Key>(new Key('1')),
               tooltip: 'Check-Out.',
-              backgroundColor: Colors.blue,
-              icon: new Icon(Icons.payment),
-              //page.fabIcon,
-              label: Text('Send'),
+              backgroundColor: Colors.green,
+              child: new Icon(Icons.send),
               onPressed: () {
                 _confirmationDialog(context);
               });

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/ui/common/horizontal_list_item.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
-
+import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
 final refItems = Firestore.instance.collection('Items');
 
 class SubMenuPage extends StatelessWidget {
@@ -50,6 +50,20 @@ class SubMenuPage extends StatelessWidget {
                 ]));
           },
           itemCount: _subCategories.length,
-        ));
+        ),
+      floatingActionButton: new FloatingActionButton(
+        backgroundColor: Colors.red,
+        onPressed: () {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            new MaterialPageRoute(
+              builder: (context) => new ShoppingCartPage(),
+            ),
+          );
+        }, //animate,
+        tooltip: 'Toggle',
+        child: Icon(Icons.shopping_cart),
+      ),);
   }
 }

@@ -8,8 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
-import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
-
+import 'package:nero_restaurant/ui/loyalty_card_page.dart';
 
 
 void main() => runApp(new NeroRestaurant());
@@ -22,7 +21,10 @@ class NeroRestaurant extends StatelessWidget {
       title: 'Nero Digital',
       theme: mainTheme,
       home: new LoginPage(title: 'Nero Digital'),
-
+      routes: <String, WidgetBuilder>{
+        '/main_order_page': (_) => new MainOrderPage(),
+        '/loyalty_card_page': (_) => new LoyaltyCardPage(),
+      },
     );
   }
 }

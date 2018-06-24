@@ -42,7 +42,7 @@ class _ItemPageState extends State<ItemPage> {
 //          _buildTopHeader(),
           _buildProfileRow(),
           _buildBottomPart(),
-          thisItem.options[0] !='' ? _buildOptions():null,
+          thisItem.options[0] !='' ? _buildOptions():Container(),
           _buildFab(),
 
         ],

@@ -83,40 +83,41 @@ class _SelectionListItem extends State<SelectionListItem> {
   }
 
   Widget _actionRow(BuildContext context) {
-    return new Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-      new InkWell(
-          onTap: () {
-            _addToFavorites();
-          },
-          child: widget.selection.favorite == true
-              ? Icon(
-                  Icons.favorite,
-                  size: 35.0,
-                )
-              : Icon(
-                  Icons.favorite_border,
-                  size: 35.0,
-                )),
-      new InkWell(
-          onTap: () {
-            _addToCart();
-          },
-          child: new Icon(
-            Icons.add_circle_outline,
-            size: 35.0,
-          )),
-      widget.fromShoppingPage
-          ? new InkWell(
+          new InkWell(
               onTap: () {
-                _removeFromCart();
+                _addToFavorites();
+              },
+              child: widget.selection.favorite == true
+                  ? Icon(
+                      Icons.favorite,
+                      size: 35.0,
+                    )
+                  : Icon(
+                      Icons.favorite_border,
+                      size: 35.0,
+                    )),
+          new InkWell(
+              onTap: () {
+                _addToCart();
               },
               child: new Icon(
-                Icons.remove_circle_outline,
+                Icons.add_circle_outline,
                 size: 35.0,
-              ))
-          : new Container(),
-    ]);
+              )),
+          widget.fromShoppingPage
+              ? new InkWell(
+                  onTap: () {
+                    _removeFromCart();
+                  },
+                  child: new Icon(
+                    Icons.remove_circle_outline,
+                    size: 35.0,
+                  ))
+              : new Container(),
+        ]);
   }
 
   Widget _image(BuildContext context) {
@@ -133,9 +134,14 @@ class _SelectionListItem extends State<SelectionListItem> {
 
   Widget _title(BuildContext context) {
     return new Padding(
-        padding: new EdgeInsets.only(bottom: 10.0, top:5.0,),
-        child: new Text(getItemFromDocId(widget.selection.itemDocId).name,
-          style: Theme.of(context).textTheme.headline,));
+        padding: new EdgeInsets.only(
+          bottom: 10.0,
+          top: 5.0,
+        ),
+        child: new Text(
+          getItemFromDocId(widget.selection.itemDocId).name,
+          style: Theme.of(context).textTheme.headline,
+        ));
   }
 
   Widget _chips(BuildContext context) {
@@ -160,25 +166,32 @@ class _SelectionListItem extends State<SelectionListItem> {
 
   Widget _structure(BuildContext context) {
     return Container(
-        height: 205.0,
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//        height: 200.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-              _image(context),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                _title(context),
-                Container(
-                  height: 110.0,
-                  width: 300.0,
-                child: _chips(context),
-                ),
-              ]),
-            ]),
-            Container(padding: EdgeInsets.only(bottom: 5.0,), child:_actionRow(context),
-            )],
+                  _image(context),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _title(context),
+                        Container(
+//                          height: 110.0,
+                          width: 300.0,
+                          child: _chips(context),
+                        ),
+                      ]),
+                ]),
+            Container(
+              padding: EdgeInsets.only(
+                 left: 50.0, right: 20.0,
+              ),
+              child: _actionRow(context),
+            )
+          ],
         ));
   }
 

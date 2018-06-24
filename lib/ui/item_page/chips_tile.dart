@@ -26,15 +26,19 @@ class _ChipsTileState extends State<ChipsTile> {
     if (widget.label.split != "") {
       _labelString = widget.label.split('_')[0];
       _chipType = widget.label.split('_')[1];
-      if (_chipType == 'req')
+      if (_chipType == 'req') {
         initialReq = 0;
+        List<String> list = new List();
+        list.add(widget.values[0]);
+        widget.choices.addAll({widget.label: list});
+      }
     }
     super.initState();
   }
 
   void _selected(String choice, bool selected) {
     List<String> list = new List();
-
+    initialReq = 1;//stop initialchoice
     if (selected == true) {
       if (widget.choices.containsKey(widget.label)) if (_chipType == 'one' || _chipType == 'req')
         widget.choices.remove(widget.label);

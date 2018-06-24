@@ -10,9 +10,10 @@ dependencies:
   firebase_messaging: ^1.0.2
   cached_network_image: "^0.4.1+1"
   qr_flutter: ^1.1.1
-  flutter_fab_dialer: "^0.0.5"
+#  flutter_fab_dialer: "^0.0.5"
   flutter_circular_chart: "^0.0.3"
   sliver_fab: "^0.1.0"
+  flutter_webview_plugin: "^0.1.6"
 
 
 

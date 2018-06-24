@@ -19,25 +19,25 @@ class OrderCard extends StatelessWidget {
             title: const Text('Whats for dinner'),
             subtitle: const Text('Flavorful protein rich goodness.'),
           ),
-//          new ButtonTheme.bar(
-//            // make buttons use the appropriate styles for cards
-//            child: new ButtonBar(
-//              children: <Widget>[
-//                new RaisedButton(
-//                  color: Colors.white,
-//                  child: const Text('ORDER'),
-//                  onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      new MaterialPageRoute(
-//                        builder: (context) => new MainOrderPage(),
-//                      ),
-//                    );
-//                  },
-//                ),
-//              ],
-//            ),
-//          ),
+          new ButtonTheme.bar(
+            // make buttons use the appropriate styles for cards
+            child: new ButtonBar(
+              children: <Widget>[
+                new RaisedButton(
+                  color: Colors.white,
+                  child: const Text('ORDER'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (context) => new MainOrderPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

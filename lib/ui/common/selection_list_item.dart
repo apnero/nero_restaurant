@@ -5,7 +5,6 @@ import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/model/item_model.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
-import 'package:nero_restaurant/ui/style.dart';
 
 class SelectionListItem extends StatefulWidget {
   final BuildContext context;
@@ -32,12 +31,12 @@ class _SelectionListItem extends State<SelectionListItem> {
           .of(context)
           .showSnackBar(new SnackBar(content: new Text("Added to Favorites")));
       widget.selection.favorite = true;
-      modifySelection(widget.selection);
+      FirebaseCalls.modifySelection(widget.selection);
     } else {
       Scaffold.of(context).showSnackBar(
           new SnackBar(content: new Text("Removed from Favorites")));
       widget.selection.favorite = false;
-      modifySelection(widget.selection);
+      FirebaseCalls.modifySelection(widget.selection);
     }
 
     setState(() {});
@@ -55,7 +54,7 @@ class _SelectionListItem extends State<SelectionListItem> {
     }
 
     widget.selection.inCart = true;
-    modifySelection(widget.selection);
+    FirebaseCalls.modifySelection(widget.selection);
 
     setState(() {});
   }
@@ -65,7 +64,7 @@ class _SelectionListItem extends State<SelectionListItem> {
         .of(context)
         .showSnackBar(new SnackBar(content: new Text("Removed From Cart")));
     widget.selection.inCart = false;
-    modifySelection(widget.selection);
+    FirebaseCalls.modifySelection(widget.selection);
   }
 
   List<String> mapToOneList(Map<String, List<String>> map) {

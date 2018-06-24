@@ -1,5 +1,6 @@
 import 'package:nero_restaurant/model/globals.dart' as globals;
 
+
 Map<String, List<String>> getOptionsForThisItem(List<dynamic> options) {
   Map<String, List<String>> optionFields = new Map();
 

@@ -187,10 +187,10 @@ class _AnimatedFabState extends State<AnimatedFab>
 
     if (fav == true) {
       widget.selection.favorite = true;
-      modifySelection(widget.selection);
+      FirebaseCalls.modifySelection(widget.selection);
     } else {
       widget.selection.favorite = false;
-      modifySelection(widget.selection);
+      FirebaseCalls.modifySelection(widget.selection);
     }
 
     close();
@@ -201,7 +201,7 @@ class _AnimatedFabState extends State<AnimatedFab>
         new SnackBar(content: new Text("Item Had Been Added To The Cart!")));
 
     widget.selection.inCart = true;
-    modifySelection(widget.selection);
+    FirebaseCalls.modifySelection(widget.selection);
     close();
   }
 

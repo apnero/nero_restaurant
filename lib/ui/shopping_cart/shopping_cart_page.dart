@@ -70,7 +70,7 @@ class ShoppingCartPage extends StatelessWidget {
             new FlatButton(
               child: new Text('Yes'),
               onPressed: () {
-                sendOrder();
+                FirebaseCalls.sendOrder();
                 Navigator.pop(context);
                 _messageDialog(context);
               },

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nero_restaurant/ui/submenu_page/submenu_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/model/globals.dart' as globals;
-import 'package:nero_restaurant/model/item_model.dart';
 import 'package:nero_restaurant/model/category_model.dart';
 
 class MenuTab extends StatelessWidget {

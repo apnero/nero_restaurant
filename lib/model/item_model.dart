@@ -23,7 +23,7 @@ class Item {
   final String heading;
   final String category;
   final String subCategory;
-  final String featured;
+  final bool featured;
   final List<dynamic> options;
   final String url;
   final double price;

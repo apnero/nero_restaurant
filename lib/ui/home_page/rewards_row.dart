@@ -13,7 +13,7 @@ class RewardsRow extends StatelessWidget {
         child: new Row(
           children: <Widget>[
             new Container(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.only(left:10.0, top:10.0,right:10.0,),
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[

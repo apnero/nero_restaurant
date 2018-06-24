@@ -4,15 +4,12 @@ import 'package:http/http.dart' as http;
 
 import 'package:nero_restaurant/model/globals.dart' as globals;
 import 'package:flutter/material.dart';
-import 'package:nero_restaurant/ui/home_page/order_card.dart';
 import 'package:nero_restaurant/ui/home_page/rewards_row.dart';
-import 'package:nero_restaurant/ui/loyalty_card_page.dart';
 import 'package:nero_restaurant/ui/home_page/weather_row.dart';
 import 'package:nero_restaurant/model/weather_model.dart';
-import 'package:nero_restaurant/ui/home_page/special_card.dart';
-import 'package:nero_restaurant/ui/home_page/event_card.dart';
-import 'package:nero_restaurant/model/selection_model.dart';
-import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
+import 'package:nero_restaurant/model/web_link_model.dart';
+import 'package:nero_restaurant/ui/home_page/web_link_cards.dart';
+import 'package:nero_restaurant/ui/home_page/flutter_fab_dialer.dart';
 
 Future<Weather> fetchWeather() async {
   final response = await http.get(
@@ -31,60 +28,58 @@ class HomePage extends StatelessWidget {
         Colors.blue,
         4.0,
         "Button menu 1",
-          () => Navigator.pushNamed(context, "/main_order_page"),
+        () => Navigator.pushNamed(context, "/main_order_page"),
       ),
       new FabMiniMenuItem.noText(
         new Icon(Icons.card_membership),
         Colors.blue,
         4.0,
         "Button menu 2",
-            () => Navigator.pushNamed(context, "/loyalty_card_page"),
+        () => Navigator.pushNamed(context, "/loyalty_card_page"),
       )
     ];
 
     return new Scaffold(
-      appBar: new AppBar(
-          title: globals.currentUser != null
-              ? new Text(
-                  'Welcome ' + globals.currentUser.displayName.split(' ')[0])
-              : new Text('Welcome'),
-          elevation: 4.0,
-          bottom: new PreferredSize(
-              preferredSize: Size(200.0, 25.0),
-              child: new Container(
-                child: new FutureBuilder<Weather>(
-                    future: fetchWeather(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return new WeatherRow(data: snapshot.data);
-                      } else if (snapshot.hasError) {
-                        return new Text("${snapshot.error}");
-                      } else
-                        return new Container(
-                          height: 30.0,
-                        );
-                    }),
-              ))),
-      body: new Stack(
-    children: <Widget>[
-    new Container(
-          child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          new Expanded(
-              child: new ListView(children: <Widget>[
-            globals.currentUser != null ? new RewardsRow() : new Container(),
-            new EventCard(),
-            new SpecialCard(
-              selection: Selection.fromItemId('G8U7PeLXNI4f4mzYbert'),
-            ),
-            new OrderCard(),
-          ])),
-
-        ],
-      )),
-    new FabDialer(_fabMiniMenuItemList, Colors.blue, new Icon(Icons.add)),
-
-    ]));
+        appBar: new AppBar(
+            title: globals.currentUser != null
+                ? new Text(
+                    'Welcome ' + globals.currentUser.displayName.split(' ')[0])
+                : new Text('Welcome'),
+            elevation: 4.0,
+            bottom: new PreferredSize(
+                preferredSize: Size(200.0, 25.0),
+                child: new Container(
+                  child: new FutureBuilder<Weather>(
+                      future: fetchWeather(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return new WeatherRow(data: snapshot.data);
+                        } else if (snapshot.hasError) {
+                          return new Text("${snapshot.error}");
+                        } else
+                          return new Container(
+                            height: 30.0,
+                          );
+                      }),
+                ))),
+        body: new Stack(children: <Widget>[
+          new Container(
+              child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                globals.currentUser != null
+                    ? new RewardsRow()
+                    : new Container(),
+                new Expanded(
+                    child: new ListView(
+                  children: globals.webLinks != null
+                      ? globals.webLinks.map<Widget>((WebLink webLink) {
+                          return WebLinkCard(data: webLink);
+                        }).toList()
+                      : [Container(), Container()],
+                )),
+              ])),
+          new FabDialer(_fabMiniMenuItemList, Colors.blue, new Icon(Icons.add)),
+        ]));
   }
 }

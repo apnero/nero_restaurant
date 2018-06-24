@@ -25,7 +25,7 @@ class FeaturedTab extends StatelessWidget {
                         stream: refItems
                             .where('heading',
                             isEqualTo: _headings[index])
-                            .where('featured', isEqualTo: 'true')
+                            .where('featured', isEqualTo: true)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData)

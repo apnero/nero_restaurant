@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/chips_tile.dart';
 import 'package:nero_restaurant/model/item_model.dart';
 import 'package:nero_restaurant/model/options_model.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
-import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
 import 'package:nero_restaurant/ui/item_page/animated_fab.dart';
 import 'package:nero_restaurant/ui/item_page/diagonal_clipper.dart';
 
@@ -29,7 +27,7 @@ class _ItemPageState extends State<ItemPage> {
   void initState() {
     thisItem = getItemFromDocId(widget.selection.itemDocId);
     thisItemOptions = getOptionsForThisItem(thisItem.options);
-    uid = getCurrentUserId();
+    uid = FirebaseCalls.getCurrentUserId();
     super.initState();
   }
 

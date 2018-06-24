@@ -16,15 +16,12 @@ class HorizontalListItem extends StatefulWidget {
 }
 
 class _HorizontalListItem extends State<HorizontalListItem> {
-  bool _favorited;
-
   Item thisItem;
 
 
   @override
   void initState() {
     thisItem = getItemFromDocId(widget.selection.itemDocId);
-    _favorited = widget.selection.favorite;
     super.initState();
   }
 

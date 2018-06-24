@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';

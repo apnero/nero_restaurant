@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/model/item_model.dart';
 
 
@@ -21,7 +20,7 @@ class _HorizontalListItem extends State<HorizontalListItem> {
 
   @override
   void initState() {
-    thisItem = getItemFromDocId(widget.selection.itemDocId);
+    thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
     super.initState();
   }
 
@@ -56,7 +55,7 @@ class _HorizontalListItem extends State<HorizontalListItem> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: new Text(
                           thisItem.name,
-                          style: subMenuTextLabel,
+                          style: Theme.of(context).textTheme.title,
                           textAlign: TextAlign.center,
                         ),
                       ),

@@ -1,7 +1,6 @@
 import 'package:nero_restaurant/model/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
-import 'package:nero_restaurant/ui/style.dart';
 
 class RewardDetailsPage extends StatelessWidget {
   @override
@@ -14,7 +13,7 @@ class RewardDetailsPage extends StatelessWidget {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            new Text('REWARDS PROGRESS', style: rewardRowText),
+            new Text('REWARDS PROGRESS', style: Theme.of(context).textTheme.title),
             new AnimatedCircularChart(
               key: new Key('key'),
               size: new Size(100.0, 100.0),
@@ -46,7 +45,7 @@ class RewardDetailsPage extends StatelessWidget {
               ),
             ),
             new Divider(),
-            new Text('MEMBERSHIP STATUS', style: rewardRowText),
+            new Text('MEMBERSHIP STATUS', style: Theme.of(context).textTheme.title),
             new Text('Novice Status',
                 style: new TextStyle(
                   color: Colors.greenAccent,
@@ -56,7 +55,7 @@ class RewardDetailsPage extends StatelessWidget {
                 'Earn ' +
                     (300 - globals.currentUser.points).truncate().toString() +
                     ' points to reach Premier Status',
-                style: rewardRowText),
+                style: Theme.of(context).textTheme.title),
           ],
         ),
       ),

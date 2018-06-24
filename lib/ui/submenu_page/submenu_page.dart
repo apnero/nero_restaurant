@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:nero_restaurant/model/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/ui/common/horizontal_list_item.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
@@ -24,13 +23,14 @@ class SubMenuPage extends StatelessWidget {
             return Container(
                 padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 child: Column(children: <Widget>[
-                  new Text(_subCategories[index], style: menuTextHeading),
+                  new Text(_subCategories[index], style: Theme.of(context).textTheme.headline),
                   new Container(
                     height: 200.0,
                     child: new StreamBuilder(
                         stream: refItems
                             .where('subCategory',
                                 isEqualTo: _subCategories[index])
+                            .where('active', isEqualTo: true)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData)

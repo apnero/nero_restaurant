@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:nero_restaurant/model/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/ui/common/horizontal_list_item.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 
@@ -18,7 +17,7 @@ class FeaturedTab extends StatelessWidget {
             return Container(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0),
                 child: Column(children: <Widget>[
-                  new Text(_headings[index], style: menuTextHeading),
+                  new Text(_headings[index], style: Theme.of(context).textTheme.headline),
                   new Container(
                     height: 200.0,
                     child: new StreamBuilder(
@@ -26,6 +25,7 @@ class FeaturedTab extends StatelessWidget {
                             .where('heading',
                             isEqualTo: _headings[index])
                             .where('featured', isEqualTo: true)
+                            .where('active', isEqualTo: true)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData)

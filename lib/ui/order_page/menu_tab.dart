@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nero_restaurant/ui/submenu_page/submenu_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/model/globals.dart' as globals;
 import 'package:nero_restaurant/model/category_model.dart';
 
@@ -29,7 +28,7 @@ class MenuTab extends StatelessWidget {
                           categoryUrl(category))))),
           new Padding(
               padding: EdgeInsets.only(left: 25.0),
-              child: new Text(category, style: menuTextLabel))
+              child: new Text(category, style: Theme.of(context).textTheme.title))
         ])));
   }
 
@@ -42,7 +41,7 @@ class MenuTab extends StatelessWidget {
         return Container(
             padding: EdgeInsets.symmetric(vertical: 20.0),
             child: Column(children: <Widget>[
-              new Text(keys[index], style: menuTextHeading),
+              new Text(keys[index], style: Theme.of(context).textTheme.headline),
               new Column(
                 children: _categoryOrg[keys[index]].map((string) {
                   return new Column(

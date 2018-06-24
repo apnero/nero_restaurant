@@ -20,9 +20,13 @@ class SelectionListItem extends StatefulWidget {
 }
 
 class _SelectionListItem extends State<SelectionListItem> {
+
+  Item thisItem;
+
   @override
   void initState() {
     super.initState();
+  thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
   }
 
   _addToFavorites() {
@@ -128,7 +132,7 @@ class _SelectionListItem extends State<SelectionListItem> {
             image: new DecorationImage(
                 fit: BoxFit.fill,
                 image: new CachedNetworkImageProvider(
-                    getItemFromDocId(widget.selection.itemDocId).url))));
+                    thisItem.url))));
   }
 
   Widget _title(BuildContext context) {
@@ -138,7 +142,7 @@ class _SelectionListItem extends State<SelectionListItem> {
           top: 5.0,
         ),
         child: new Text(
-          getItemFromDocId(widget.selection.itemDocId).name,
+          thisItem.name,
           style: Theme.of(context).textTheme.headline,
         ));
   }
@@ -188,7 +192,7 @@ class _SelectionListItem extends State<SelectionListItem> {
               padding: EdgeInsets.only(
                  left: 50.0, right: 20.0,
               ),
-              child: _actionRow(context),
+              child: thisItem.active ? _actionRow(context):new Text('Not Available', style: Theme.of(context).textTheme.headline,),
             )
           ],
         ));
@@ -209,13 +213,13 @@ class _SelectionListItem extends State<SelectionListItem> {
         )),
         child: new InkWell(
             onTap: () {
-              Navigator.push(
+              thisItem.active ? Navigator.push(
                 context,
                 new MaterialPageRoute(
                   builder: (context) =>
                       new ItemPage(selection: widget.selection),
                 ),
-              );
+              ):null;
             },
             child: new Hero(
                 tag: widget.selection.hashCode.toString(),

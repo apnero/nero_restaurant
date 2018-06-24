@@ -6,7 +6,6 @@ import 'package:flutter_firebase_ui/flutter_firebase_ui.dart';
 import 'package:nero_restaurant/ui/home_page/home_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 import 'package:nero_restaurant/ui/loyalty_card_page.dart';
 
@@ -19,7 +18,7 @@ class NeroRestaurant extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Nero Digital',
-      theme: mainTheme,
+      theme: new ThemeData(brightness: Brightness.dark,),
       home: new LoginPage(title: 'Nero Digital'),
       routes: <String, WidgetBuilder>{
         '/main_order_page': (_) => new MainOrderPage(),

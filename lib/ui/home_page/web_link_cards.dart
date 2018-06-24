@@ -30,9 +30,13 @@ class WebLinkCard extends StatelessWidget {
             // make buttons use the appropriate styles for cards
             child: new ButtonBar(
               children: <Widget>[
-                new RaisedButton(
-                  color: Colors.white,
-                  child: const Text('VIEW'),
+                new OutlineButton(
+                  child: Text('Details',
+                      style: Theme.of(context).textTheme.subhead),
+//                    color: Theme.of(context).accentColor,
+                  borderSide: new BorderSide(color: Colors.white70),
+                  splashColor: Colors.blueGrey,
+
                   onPressed: () {
                     Navigator.push(
                       context,

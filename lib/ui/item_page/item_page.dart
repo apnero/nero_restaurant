@@ -25,7 +25,7 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   void initState() {
-    thisItem = getItemFromDocId(widget.selection.itemDocId);
+    thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
     thisItemOptions = getOptionsForThisItem(thisItem.options);
     uid = FirebaseCalls.getCurrentUserId();
     super.initState();

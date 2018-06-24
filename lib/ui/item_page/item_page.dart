@@ -1,34 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nero_restaurant/ui/style.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/chips_tile.dart';
-import 'package:flutter_fab_dialer/flutter_fab_dialer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nero_restaurant/model/item_model.dart';
+import 'package:nero_restaurant/model/options_model.dart';
+import 'package:nero_restaurant/services/firebase_calls.dart';
+import 'package:nero_restaurant/ui/item_page/animated_fab.dart';
+import 'package:nero_restaurant/ui/item_page/diagonal_clipper.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
-final refFavorites = Firestore.instance.collection('Favorites');
-final refCarts = Firestore.instance.collection('Carts');
-
-enum AppBarBehavior { normal, pinned, floating, snapping }
-
-class MyApp extends StatelessWidget {
-  MyApp({Key key, @required this.selection}) : super(key: key);
-  final Selection selection;
-
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Flutter',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new Scaffold(body: new ItemPage(selection: selection)),
-    );
-  }
-}
 
 class ItemPage extends StatefulWidget {
   ItemPage({Key key, @required this.selection}) : super(key: key);
@@ -39,221 +18,122 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> {
-  static final GlobalKey<ScaffoldState> _scaffoldKey =
-      new GlobalKey<ScaffoldState>();
-  BuildContext thisContext;
+  final double _imageHeight = 256.0;
+  Item thisItem;
+  Map<String, List<String>> thisItemOptions;
+  String uid = '';
 
-  final double _appBarHeight = 256.0;
-  bool _favorited = false;
-
-  _addToFavorites() {
-    if (_favorited == false) {
-      Scaffold
-          .of(context)
-          .showSnackBar(new SnackBar(content: new Text("Added to Favorites")));
-
-      Firestore.instance.runTransaction((transaction) async {
-        FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-
-        final DocumentSnapshot newDoc =
-            await transaction.get(refFavorites.document());
-        final Map<String, dynamic> data =
-            _toMap(widget.selection, firebaseUser, newDoc.documentID);
-        await transaction.set(newDoc.reference, data);
-      });
-    } else
-      Scaffold.of(context).showSnackBar(
-          new SnackBar(content: new Text("Removed from Favorites")));
-    setState(() {
-      _favorited = !_favorited;
-    });
+  @override
+  void initState() {
+    thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
+    thisItemOptions = getOptionsForThisItem(thisItem.options);
+    uid = FirebaseCalls.getCurrentUserId();
+    super.initState();
   }
-
-
-  _addToCart() {
-
-    Scaffold
-        .of(context)
-        .showSnackBar(new SnackBar(content: new Text("Added to Cart")));
-
-    Firestore.instance.runTransaction((transaction) async {
-      FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-
-      final DocumentSnapshot newDoc =
-      await transaction.get(refCarts.document());
-      final Map<String, dynamic> data =
-      _toMap(widget.selection, firebaseUser, newDoc.documentID);
-      await transaction.set(newDoc.reference, data);
-    });
-
-//    setState(() {
-////      _favorited = !_favorited;
-//    });
-  }
-
-  Map<String, dynamic> _toMap(
-      Selection item, FirebaseUser user, String docRef) {
-    final Map<String, dynamic> result = {};
-
-    result.addAll(item.toMap());
-    result['uid'] = user.uid;
-    result['docRef'] = docRef;
-    result['status'] = "Pending";
-    return result;
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
-    var _fabMiniMenuItemList = [
-      new FabMiniMenuItem.noText(
-        new Icon(Icons.favorite_border),
-        Colors.cyan,
-        4.0,
-        "Button menu",
-        _addToFavorites,
+    return new Scaffold(
+      body: new Stack(
+        children: <Widget>[
+          _buildImage(),
+//          _buildTopHeader(),
+          _buildProfileRow(),
+          _buildBottomPart(),
+          thisItem.options[0] !='' ? _buildOptions():Container(),
+          _buildFab(),
+
+        ],
       ),
-      new FabMiniMenuItem.noText(
-        new Icon(Icons.add_shopping_cart),
-        Colors.cyan,
-        4.0,
-        "Button menu",
-        _addToCart,
-      )
-    ];
+    );
+  }
 
-    var _fabMiniMenuItemListFavorite = [
-      new FabMiniMenuItem.noText(
-        new Icon(Icons.favorite),
-        Colors.cyan,
-        4.0,
-        "Button menu",
-        _addToFavorites,
+  Widget _buildFab() {
+    return new Positioned(
+        top: _imageHeight - 100.0,
+        right: -40.0,
+        child: new AnimatedFab(
+          selection: widget.selection,
+        ));
+  }
+
+  Widget _buildImage() {
+    return new Positioned.fill(
+      bottom: null,
+      child: new ClipPath(
+        clipper: new DialogonalClipper(),
+        child: new Hero(
+            tag: widget.selection.hashCode.toString(),
+            child: new Container(
+                height: 256.0,
+                decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                        fit: BoxFit.cover,
+                        image: new CachedNetworkImageProvider(thisItem.url))))),
       ),
-      new FabMiniMenuItem.noText(
-        new Icon(Icons.add_shopping_cart),
-        Colors.cyan,
-        4.0,
-        "Button menu",
-        _addToCart,
-      )
-    ];
+    );
+  }
 
-    return new Theme(
-      data: mainTheme,
-      child: new Scaffold(
-        body: new Stack(children: <Widget>[
-          new CustomScrollView(slivers: <Widget>[
-            new SliverAppBar(
-              expandedHeight: _appBarHeight,
-              pinned: false,
-              flexibleSpace: new FlexibleSpaceBar(
-//                title:  Text(itemDoc['name']),
-//                centerTitle: true,
-                background: new Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    new Hero(
-                        tag: widget.selection.name,
-                        child: new Container(
-                            height: _appBarHeight,
-                            decoration: new BoxDecoration(
-                                image: new DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: new CachedNetworkImageProvider(
-                                        widget.selection.url))))),
+  Widget _buildBottomPart() {
+    return new Padding(
+      padding: new EdgeInsets.only(top: _imageHeight),
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildMyTasksHeader(),
+        ],
+      ),
+    );
+  }
 
-                    // This gradient ensures that the toolbar icons are distinct
-                    // against the background image
-                    const DecoratedBox(
-                      decoration: const BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: const Alignment(0.0, -1.0),
-                          end: const Alignment(0.0, -0.4),
-                          colors: const <Color>[
-                            const Color(0x60000000),
-                            const Color(0x00000000)
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            new SliverAppBar(
-              title: new Text(widget.selection.name, style: menuTextHeading),
-              automaticallyImplyLeading: false,
-//              backgroundColor: Colors.blueGrey,
-              centerTitle: true,
-              pinned: true,
-              brightness: Brightness.light,
-            ),
-            new SliverList(
-              delegate: new SliverChildListDelegate(<Widget>[
-                new Container(
-                    padding: new EdgeInsets.symmetric(horizontal: 20.0),
-                    child: new Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          new Padding(
-                            padding: new EdgeInsets.symmetric(vertical: 10.0),
-                            child: new Text(widget.selection.description,
-                                style: subMenuTextLabel),
-                          ),
-                        ]))
-              ]),
-            ),
-            widget.selection.options.isNotEmpty == true
-                ? new SliverPadding(
-                    padding: EdgeInsets.all(20.0),
-                    sliver: SliverList(
-                        delegate: new SliverChildBuilderDelegate(
-                            (BuildContext context, int index) =>
-                                widget.selection.options.values.toList()[index]
-                                            [0] !=
-                                        ''
-                                    ? new ChipsTile(
-                                        label: widget.selection.options.keys
-                                            .toList()[index],
-                                        value: widget.selection.options.values
-                                            .toList()[index],
-                                        choices: widget.selection.choices)
-                                    : new Container(),
-                            childCount:
-                                widget.selection.options.values.length)))
-                : new Container(),
-          ]),
-          _favorited == false
-              ? new FabDialer(
-                  _fabMiniMenuItemList, Colors.green, new Icon(Icons.add))
-              : new Container(),
-          _favorited == true
-              ? new FabDialer(_fabMiniMenuItemListFavorite, Colors.green,
-                  new Icon(Icons.add))
-              : new Container(),
-        ]),
-        bottomNavigationBar: BottomAppBar(
-          hasNotch: false,
-          child: new Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () => Navigator.of(context).pushNamed('/shopping-cart-page'),
-              ),
-            ],
+  Widget _buildMyTasksHeader() {
+    return new Padding(
+      padding: new EdgeInsets.only(left: 40.0),
+      child: new Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          new Text(
+            thisItem.name,
+            style: new TextStyle(fontSize: 32.0),
           ),
-        ),
+          new Padding(
+            padding: EdgeInsets.only(right:20.0, top:3.0,),
+          child: new Text(
+            thisItem.description.replaceAll('\"', ''),
+            style: Theme.of(context).textTheme.subhead,
+          )),
+        ],
       ),
+    );
+  }
 
+
+
+  Widget _buildProfileRow() {
+    return new Padding(
+      padding: new EdgeInsets.only(left: 16.0, top: _imageHeight / 2.5),
+      child: new Row(
+        children: <Widget>[
+
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildOptions() {
+    return new Padding(
+      padding: new EdgeInsets.only(left: 16.0, top: 400.0),
+      child: new ListView.builder(
+        itemCount: thisItemOptions.length,
+        itemBuilder: (context, index) {
+          return new ChipsTile(
+              label: thisItemOptions.keys.toList()[index],
+              values: thisItemOptions.values.toList()[index],
+              choices: widget.selection.choices);
+
+        },
+      ),
     );
   }
 }

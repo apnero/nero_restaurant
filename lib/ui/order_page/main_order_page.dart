@@ -3,7 +3,8 @@ import 'package:nero_restaurant/ui/order_page/favorites_tab.dart';
 import 'package:nero_restaurant/ui/order_page/featured_tab.dart';
 import 'package:nero_restaurant/ui/order_page/menu_tab.dart';
 import 'package:nero_restaurant/ui/order_page/previous_tab.dart';
-import 'package:nero_restaurant/ui/style.dart';
+import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
+
 
 class MainOrderPage extends StatelessWidget {
   @override
@@ -30,21 +31,19 @@ class MainOrderPage extends StatelessWidget {
             FavoritesTab(),
           ],
         ),
-        bottomNavigationBar: BottomAppBar(
-          hasNotch: false,
-          child: new Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: ()  => Navigator.of(context).pushNamed('/shopping-cart-page'),
-                ),
-              ]),
+        floatingActionButton: new FloatingActionButton(
+          backgroundColor: Colors.red,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              new MaterialPageRoute(
+                builder: (context) => new ShoppingCartPage(),
+              ),
+            );
+          }, //animate,
+          tooltip: 'Toggle',
+          child: Icon(Icons.shopping_cart),
         ),
       ),
     );

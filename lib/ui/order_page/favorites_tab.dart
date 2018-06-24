@@ -1,86 +1,37 @@
+import 'package:nero_restaurant/model/globals.dart' as globals;
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nero_restaurant/ui/common/selection_list_item.dart';
 
-List<Selection> favorites = [];
+final refSelections = Firestore.instance.collection('Selections');
 
-class FavoritesTab extends StatefulWidget {
-  @override
-  _FavoritesTabState createState() => new _FavoritesTabState();
-}
-
-class _FavoritesTabState extends State<FavoritesTab> {
-  @override
-  void initState() {
-    super.initState();
-
-    Future<List<Selection>> selections = fetchItems();
-    selections.then((List<Selection> listS) {
-      try {
-        setState(() {
-          favorites = listS;
-        });
-      } catch (exception) {
-        print('Error setState on FavoritesTab');
-      }
-    });
-  }
-
-  Future<List<Selection>> fetchItems() async {
-    FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-    var url =
-        "https://us-central1-nero-digital.cloudfunctions.net/favoritesQuery";
-    var response;
-
-    try {
-      response = await http.post(url, body: {'uid': firebaseUser.uid});
-
-      if (response.statusCode != HttpStatus.OK) {
-        response = 'Error getting a feed:\nHttp status ${response.statusCode}';
-      }
-    } catch (exception) {
-      response = 'Failed invoking the getFeed function. Exception: $exception';
-    }
-
-    final responseJson = json.decode(response.body);
-    print('JSON: ' + responseJson.toString());
-
-    return buildSelectionLists(responseJson);
-  }
-
-  List<Selection> buildSelectionLists(List<dynamic> json) {
-    List<Selection> list = [];
-
-    json.forEach((item) => list.add(new Selection(item)));
-
-    return list;
-  }
+class FavoritesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new CustomScrollView(
-      slivers: <Widget>[
-        new SliverFixedExtentList(
-          itemExtent: 180.0,
-          delegate: new SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return new Container(
-                alignment: Alignment.center,
-//                color: Colors.lightBlue[100 * (index % 9)],
-                child: new SelectionListItem(
-                    context: context, selection: favorites[index]),
-              );
-            },
-            childCount: favorites.length,
-          ),
-        ),
-      ],
-    );
+    return new StreamBuilder(
+        stream: refSelections.where('favorite', isEqualTo: true).where('uid', isEqualTo: globals.currentUser.id)
+        .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return new Text('Loading');
+          else if (snapshot.data.documents.length == 0)
+            return new Center(
+                child: Image.asset(
+                  'assets/images/empty-favorites.png',
+                  width: 255.0,
+                  fit: BoxFit.fitHeight,
+                ));
+          return new ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              padding: const EdgeInsets.only(bottom: 2.0, top: 8.0),
+              itemBuilder: (context, index) => new SelectionListItem(
+                    context: context,
+                    selection: Selection
+                        .fromSelectionDoc(snapshot.data.documents[index]),
+                    fromShoppingPage: false,
+                  ));
+        });
   }
 }

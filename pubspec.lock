@@ -118,18 +118,39 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  flutter_fab_dialer:
+  flutter_circular_chart:
     dependency: "direct main"
     description:
-      name: flutter_fab_dialer
+      name: flutter_circular_chart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.3"
+  flutter_facebook_login:
+    dependency: transitive
+    description:
+      name: flutter_facebook_login
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
+  flutter_firebase_ui:
+    dependency: "direct main"
+    description:
+      name: flutter_firebase_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   front_end:
     dependency: transitive
     description:
@@ -145,7 +166,7 @@ packages:
     source: hosted
     version: "1.1.5"
   google_sign_in:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_sign_in
       url: "https://pub.dartlang.org"
@@ -359,6 +380,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_fab:
+    dependency: "direct main"
+    description:
+      name: sliver_fab
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   source_map_stack_trace:
     dependency: transitive
     description:

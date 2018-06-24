@@ -4,12 +4,12 @@ class ChipsTile extends StatefulWidget {
   ChipsTile(
       {Key key,
       @required this.label,
-      @required this.value,
+      @required this.values,
       @required this.choices})
       : super(key: key);
 
-  final List<String> value;
-  final List<String> choices;
+  final List<String> values;
+  final Map<String, List<String>> choices;
   final String label;
 
   @override
@@ -17,20 +17,45 @@ class ChipsTile extends StatefulWidget {
 }
 
 class _ChipsTileState extends State<ChipsTile> {
+  String _chipType;
+  String _labelString;
+  int initialReq = 1;
 
-  void _selected(String choice, bool selected){
-
-    String chipType = widget.label.split('_')[1];
-
-    widget.value.forEach((value) {
-      if (chipType == 'one') widget.choices.remove(value);
-    });
-    setState((){
-      if (selected) widget.choices.add(choice);
-      else widget.choices.remove(choice);
-    });
+  @override
+  void initState() {
+    if (widget.label.split != "") {
+      _labelString = widget.label.split('_')[0];
+      _chipType = widget.label.split('_')[1];
+      if (_chipType == 'req') {
+        initialReq = 0;
+        List<String> list = new List();
+        list.add(widget.values[0]);
+        widget.choices.addAll({widget.label: list});
+      }
+    }
+    super.initState();
   }
 
+  void _selected(String choice, bool selected) {
+    List<String> list = new List();
+    initialReq = 1;//stop initialchoice
+    if (selected == true) {
+      if (widget.choices.containsKey(widget.label)) if (_chipType == 'one' || _chipType == 'req')
+        widget.choices.remove(widget.label);
+      else if (_chipType == 'many') list.addAll(widget.choices[widget.label]);
+
+      list.add(choice);
+      widget.choices.addAll({widget.label: list});
+    } else if (widget.choices.containsKey(widget.label) ==
+        true) if (_chipType == 'one')// || _chipType == 'req')
+      widget.choices.remove(widget.label);
+    else if (_chipType == 'many') {
+      list = widget.choices[widget.label];
+      list.remove(choice);
+      widget.choices.addAll({widget.label: list});
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +63,7 @@ class _ChipsTileState extends State<ChipsTile> {
 //      mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Text(widget.label.split('_')[0].toUpperCase()),
+          new Text(_labelString.toUpperCase()),
           new Container(
               height: 40.0,
               child: new ListView.builder(
@@ -52,15 +77,15 @@ class _ChipsTileState extends State<ChipsTile> {
                       labelPadding: new EdgeInsets.symmetric(horizontal: 5.0),
                       backgroundColor: Colors.blue,
                       selectedColor: Colors.red,
-                      label: new Text(widget.value[index]),
-                      selected:
-                          widget.choices.indexOf(widget.value[index]) != -1,
+                      label: new Text(widget.values[index]),
+                      selected: initialReq+index == 0 || (widget.choices.containsKey(widget.label) &&
+                          widget.choices[widget.label]
+                              .contains(widget.values[index])),
                       onSelected: (bool selected) {
-                        _selected(widget.value[index],selected);
+                        _selected(widget.values[index], selected);
                       },
-
                     )),
-                itemCount: widget.value.length,
+                itemCount: widget.values.length,
               )),
           new Divider(),
         ]);

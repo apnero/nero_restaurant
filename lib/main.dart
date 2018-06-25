@@ -23,6 +23,7 @@ class NeroRestaurant extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/main_order_page': (_) => new MainOrderPage(),
         '/loyalty_card_page': (_) => new LoyaltyCardPage(),
+
       },
     );
   }
@@ -54,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
+        _onMessageDialog(context, message);
         print('on message $message');
       },
       onResume: (Map<String, dynamic> message) {
@@ -77,6 +79,35 @@ class _LoginPageState extends State<LoginPage> {
     _listener.cancel();
     super.dispose();
   }
+
+  _onMessageDialog(BuildContext context,Map<String, dynamic> message) {
+    return showDialog<Null>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text(message['title']),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                new Text(message['body']),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {

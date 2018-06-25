@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
 
     return new Scaffold(
         appBar: new AppBar(
-            title: globals.currentUser != null
+            title: globals.currentUser != null && globals.currentUser.displayName.contains(' ')
                 ? new Text(
                     'Welcome ' + globals.currentUser.displayName.split(' ')[0])
                 : new Text('Welcome'),

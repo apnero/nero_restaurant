@@ -20,7 +20,7 @@ class _HorizontalListItem extends State<HorizontalListItem> {
 
   @override
   void initState() {
-    thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
+    thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
     super.initState();
   }
 

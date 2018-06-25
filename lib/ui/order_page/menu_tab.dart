@@ -25,7 +25,7 @@ class MenuTab extends StatelessWidget {
                   image: new DecorationImage(
                       fit: BoxFit.fill,
                       image: new CachedNetworkImageProvider(
-                          categoryUrl(category))))),
+                          Category.categoryUrl(category))))),
           new Padding(
               padding: EdgeInsets.only(left: 25.0),
               child: new Text(category, style: Theme.of(context).textTheme.title))
@@ -34,7 +34,7 @@ class MenuTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, List<String>> _categoryOrg = categoryOrg(globals.allCategories);
+    Map<String, List<String>> _categoryOrg = Category.categoryOrg(globals.allCategories);
     List<String> keys = _categoryOrg.keys.toList();
     return new ListView.builder(
       itemBuilder: (context, index) {

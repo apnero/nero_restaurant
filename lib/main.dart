@@ -7,7 +7,7 @@ import 'package:nero_restaurant/ui/home_page/home_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
-import 'package:nero_restaurant/ui/loyalty_card_page.dart';
+import 'package:nero_restaurant/ui/loyalty_page/loyalty_card_page.dart';
 
 
 void main() => runApp(new NeroRestaurant());

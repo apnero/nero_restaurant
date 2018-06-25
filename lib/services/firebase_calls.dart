@@ -165,9 +165,9 @@ class FirebaseCalls {
 
         await refUsers.document(firebaseUser.uid).setData({
           "id": firebaseUser.uid,
-          "photoUrl": firebaseUser.photoUrl,
-          "email": firebaseUser.email,
-          "displayName": firebaseUser.displayName,
+          "photoUrl": firebaseUser.photoUrl != null ? firebaseUser.photoUrl:'',
+          "email": firebaseUser.email != null ? firebaseUser.email:'',
+          "displayName": firebaseUser.displayName != null ? firebaseUser.displayName:'',
           "pushToken": pushToken,
           "admin": false,
           "points": 0.0,

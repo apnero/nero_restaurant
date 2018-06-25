@@ -11,7 +11,7 @@ class FeaturedTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _headings = getHeadings();
+    List<String> _headings = Category.getHeadings();
         return ListView.builder(
           itemBuilder: (context, index) {
             return Container(

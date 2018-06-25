@@ -26,7 +26,7 @@ class _SelectionListItem extends State<SelectionListItem> {
   @override
   void initState() {
     super.initState();
-  thisItem = ItemMethod.getItemFromDocId(widget.selection.itemDocId);
+  thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
   }
 
   _addToFavorites() {

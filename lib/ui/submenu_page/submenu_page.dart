@@ -13,7 +13,7 @@ class SubMenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _subCategories = getSubCategories(category);
+    List<String> _subCategories = Category.getSubCategories(category);
     return new Scaffold(
         appBar: new AppBar(
           title: new Text(category),

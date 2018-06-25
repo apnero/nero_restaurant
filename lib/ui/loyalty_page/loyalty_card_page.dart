@@ -18,7 +18,7 @@ class LoyaltyCardPage extends StatelessWidget {
             child: new Column(children: <Widget>[
           new QrImage(
             data: globals.currentUser.id,
-            size: 300.0,
+            size: 280.0,
             backgroundColor: Colors.white,
           ),
           new StreamBuilder(
@@ -34,7 +34,7 @@ class LoyaltyCardPage extends StatelessWidget {
                     'No Current Order',
                     style: Theme.of(context).textTheme.headline,
                   );
-                return new OrderStructurePage(
+                return StructurePage(
                     context: context, selections: snapshot.data.documents.map<Selection>((DocumentSnapshot document) {
                       return Selection.fromSelectionDoc(document);
                 }).toList(),);

@@ -18,7 +18,7 @@ class User {
   final String photoUrl;
   final String displayName;
   final bool admin;
-  final String pushToken;
+  final List<dynamic> pushToken;
   final double points;
 
   factory User.fromDocument(DocumentSnapshot document) {
@@ -34,14 +34,14 @@ class User {
   }
 
   //for first run after creating id
-  factory User.fromFirebaseUser(FirebaseUser user) {
+  factory User.fromFirebaseUser(FirebaseUser user, List<dynamic> pushToken) {
     return new User(
       email: user.email,
       photoUrl: user.photoUrl,
       id: user.uid,
       displayName: user.displayName,
       admin: false,
-      pushToken: '',
+      pushToken: pushToken,
       points: 0.0,
     );
   }

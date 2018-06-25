@@ -9,7 +9,6 @@ import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 import 'package:nero_restaurant/ui/loyalty_page/loyalty_card_page.dart';
 
-
 void main() => runApp(new NeroRestaurant());
 
 class NeroRestaurant extends StatelessWidget {
@@ -18,12 +17,13 @@ class NeroRestaurant extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Nero Digital',
-      theme: new ThemeData(brightness: Brightness.dark,),
+      theme: new ThemeData(
+        brightness: Brightness.dark,
+      ),
       home: new LoginPage(title: 'Nero Digital'),
       routes: <String, WidgetBuilder>{
         '/main_order_page': (_) => new MainOrderPage(),
         '/loyalty_card_page': (_) => new LoyaltyCardPage(),
-
       },
     );
   }
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   FirebaseUser _currentUser;
-  String pushToken;
+ String pushToken = '';
 
   @override
   void initState() {
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  _onMessageDialog(BuildContext context,Map<String, dynamic> message) {
+  _onMessageDialog(BuildContext context, Map<String, dynamic> message) {
     return showDialog<Null>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -99,7 +99,6 @@ class _LoginPageState extends State<LoginPage> {
               child: new Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
-
               },
             ),
           ],
@@ -107,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,19 +135,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checkCurrentUser() async {
-    _currentUser = await _auth.currentUser();
-    _currentUser?.getIdToken(refresh: true);
+    try {
+      _currentUser = await _auth.currentUser();
+      _currentUser?.getIdToken(refresh: true);
 
-    if(_currentUser != null)
-      FirebaseCalls.saveUser(_currentUser, pushToken);
+      if (_currentUser != null) FirebaseCalls.saveUser(_currentUser, pushToken);
 
-    _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
-      setState(() {
-        _currentUser = user;
-        if(_currentUser != null)
-          FirebaseCalls.saveUser(_currentUser, pushToken);
+      _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+        setState(() {
+          _currentUser = user;
+          if (_currentUser != null)
+            FirebaseCalls.saveUser(_currentUser, pushToken);
+        });
       });
-    });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
-

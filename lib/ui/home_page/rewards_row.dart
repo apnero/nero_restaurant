@@ -19,7 +19,7 @@ class RewardsRow extends StatelessWidget {
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    new Text("NERO DIGITAL REWARDS",
+                    new Text("DIGITAL REWARDS",
                         style: Theme.of(context).textTheme.subhead),
                     new AnimatedCircularChart(
                         key: new Key('key'),

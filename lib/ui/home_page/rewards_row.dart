@@ -9,6 +9,7 @@ class RewardsRow extends StatelessWidget {
     return new Container(
         decoration: new BoxDecoration(color: Colors.grey),
         child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             new Container(
                 padding: const EdgeInsets.only(
@@ -46,7 +47,7 @@ class RewardsRow extends StatelessWidget {
                         holeLabel:
                             globals.currentUser.points.truncate().toString() +
                                 '/300',
-                        labelStyle: Theme.of(context).textTheme.headline),
+                        labelStyle: Theme.of(context).textTheme.title),
                   ],
                 )),
             new Container(

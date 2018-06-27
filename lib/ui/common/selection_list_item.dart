@@ -151,7 +151,7 @@ class _SelectionListItem extends State<SelectionListItem> {
     return new Wrap(
       alignment: WrapAlignment.center,
       direction: Axis.horizontal,
-      spacing: 5.0, // gap between adjacent chips
+      spacing: 4.0, // gap between adjacent chips
       runSpacing: 2.0,
       children: _getList(widget.selection.choices.values)
           .map<Widget>((String choice) {
@@ -170,7 +170,6 @@ class _SelectionListItem extends State<SelectionListItem> {
 
   Widget _structure(BuildContext context) {
     return Container(
-//        height: 200.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -183,8 +182,7 @@ class _SelectionListItem extends State<SelectionListItem> {
                       children: <Widget>[
                         _title(context),
                         Container(
-//                          height: 110.0,
-                          width: 272.0,
+                          width: 232.0,
                           child: _chips(context),
                         ),
                       ]),

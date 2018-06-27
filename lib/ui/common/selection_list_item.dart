@@ -149,6 +149,7 @@ class _SelectionListItem extends State<SelectionListItem> {
 
   Widget _chips(BuildContext context) {
     return new Wrap(
+      alignment: WrapAlignment.center,
       direction: Axis.horizontal,
       spacing: 5.0, // gap between adjacent chips
       runSpacing: 2.0,
@@ -183,7 +184,7 @@ class _SelectionListItem extends State<SelectionListItem> {
                         _title(context),
                         Container(
 //                          height: 110.0,
-                          width: 300.0,
+                          width: 272.0,
                           child: _chips(context),
                         ),
                       ]),

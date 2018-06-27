@@ -56,7 +56,6 @@ class _ChipsTileState extends State<ChipsTile> {
     }
     setState(() {});
   }
-
   @override
   Widget build(BuildContext context) {
     return new Column(
@@ -73,10 +72,12 @@ class _ChipsTileState extends State<ChipsTile> {
                     new EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 itemBuilder: (context, index) => new Padding(
                     padding: new EdgeInsets.symmetric(horizontal: 5.0),
-                    child: FilterChip(
+                    child: ChoiceChip(
+//                      labelStyle: Theme.of(context).chipTheme.labelStyle.decorationStyle.,
                       labelPadding: new EdgeInsets.symmetric(horizontal: 5.0),
-                      backgroundColor: Colors.blue,
-                      selectedColor: Colors.red,
+//                      labelStyle: TextStyle(color: myColor),
+                      backgroundColor: Colors.black12,
+                      selectedColor: Colors.lightBlue,
                       label: new Text(widget.values[index]),
                       selected: initialReq+index == 0 || (widget.choices.containsKey(widget.label) &&
                           widget.choices[widget.label]

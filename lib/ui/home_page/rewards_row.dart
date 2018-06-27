@@ -58,7 +58,7 @@ class RewardsRow extends StatelessWidget {
                         (300 - globals.currentUser.points)
                                 .truncate()
                                 .toString() +
-                            ' points until Premier',
+                            ' until Premier',
                         style: Theme.of(context).textTheme.subhead,
                       ),
                       new OutlineButton(

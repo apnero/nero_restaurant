@@ -9,17 +9,14 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nero_restaurant/model/web_link_model.dart';
 
-
 class FirebaseCalls {
-
-
   static Future loadItems() async {
     final refItems = Firestore.instance.collection('Items');
     List<Item> itemList = [];
 
-    await refItems.getDocuments().then((querySnapshot) =>
-        querySnapshot.documents
-            .forEach((document) => itemList.add(Item.fromDocument(document))));
+    await refItems.getDocuments().then((querySnapshot) => querySnapshot
+        .documents
+        .forEach((document) => itemList.add(Item.fromDocument(document))));
 
     globals.allItems = itemList;
     return;
@@ -31,8 +28,7 @@ class FirebaseCalls {
 
     await refCategories.getDocuments().then((querySnapshot) =>
         querySnapshot.documents.forEach(
-                (document) =>
-                categoryList.add(Category.fromDocument(document))));
+            (document) => categoryList.add(Category.fromDocument(document))));
 
     globals.allCategories = categoryList;
     return;
@@ -44,10 +40,9 @@ class FirebaseCalls {
     List<dynamic> list;
     Map<String, List<String>> optionStringMap = new Map();
 
-    await refOptions.getDocuments().then((querySnapshot) =>
-        querySnapshot
-            .documents
-            .forEach((document) => optionMap.addAll(document.data)));
+    await refOptions.getDocuments().then((querySnapshot) => querySnapshot
+        .documents
+        .forEach((document) => optionMap.addAll(document.data)));
 
     optionMap.forEach((k, v) {
       if (v is List)
@@ -61,41 +56,24 @@ class FirebaseCalls {
     return;
   }
 
-
   static Future loadWebLinks() async {
     final refWebLinks = Firestore.instance.collection('WebLinks');
     List<WebLink> webLinkList = [];
 
     await refWebLinks.where('active', isEqualTo: true).getDocuments().then(
-            (querySnapshot) =>
-            querySnapshot.documents.forEach(
-                    (document) =>
-                    webLinkList.add(WebLink.fromDocument(document))));
-
+        (querySnapshot) => querySnapshot.documents.forEach(
+            (document) => webLinkList.add(WebLink.fromDocument(document))));
 
     List<WebLink> removeList = [];
     removeList.addAll(webLinkList);
     removeList.forEach((webLink) {
-      if (DateTime(DateTime
-          .now()
-          .year, DateTime
-          .now()
-          .month, DateTime
-          .now()
-          .day,
-          webLink.start, 0)
-          .isAfter(DateTime.now()) ||
-          DateTime(DateTime
-              .now()
-              .year, DateTime
-              .now()
-              .month, DateTime
-              .now()
-              .day,
-              webLink.end, 0)
+      if (DateTime(DateTime.now().year, DateTime.now().month,
+                  DateTime.now().day, webLink.start, 0)
+              .isAfter(DateTime.now()) ||
+          DateTime(DateTime.now().year, DateTime.now().month,
+                  DateTime.now().day, webLink.end, 0)
               .isBefore(DateTime.now())) webLinkList.remove(webLink);
     });
-
 
     globals.webLinks = webLinkList;
     return;
@@ -111,13 +89,13 @@ class FirebaseCalls {
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
         selection.uid = firebaseUser.uid;
         final DocumentSnapshot newDoc =
-        await transaction.get(refSelections.document());
+            await transaction.get(refSelections.document());
         selection.selectionId = newDoc.reference.documentID;
         await transaction.set(newDoc.reference, selection.toMap());
       } else {
         //modify one
-        final DocumentSnapshot existingDoc =
-        await transaction.get(refSelections.document(selection.selectionId));
+        final DocumentSnapshot existingDoc = await transaction
+            .get(refSelections.document(selection.selectionId));
         await transaction.update(existingDoc.reference, selection.toMap());
       }
     });
@@ -157,34 +135,38 @@ class FirebaseCalls {
   static Future saveUser(FirebaseUser firebaseUser, String pushToken) async {
     final refUsers = Firestore.instance.collection('Users');
     DocumentSnapshot userRecord;
+
     if (firebaseUser != null) {
       userRecord = await refUsers.document(firebaseUser.uid).get();
 
       if (userRecord.data == null) {
         // no user record exists, time to create
-
+        List<dynamic> list = [];
+        if (pushToken != null || pushToken != '') list.add(pushToken);
         await refUsers.document(firebaseUser.uid).setData({
           "id": firebaseUser.uid,
-          "photoUrl": firebaseUser.photoUrl != null
-              ? firebaseUser.photoUrl
-              : '',
+          "photoUrl":
+              firebaseUser.photoUrl != null ? firebaseUser.photoUrl : '',
           "email": firebaseUser.email != null ? firebaseUser.email : '',
-          "displayName": firebaseUser.displayName != null ? firebaseUser
-              .displayName : '',
-          pushToken != null && pushToken != '' ? "pushToken": [pushToken]: null,
+          "displayName":
+              firebaseUser.displayName != null ? firebaseUser.displayName : '',
+          "pushToken": list,
           "admin": false,
           "points": 0.0,
         });
 
         globals.currentUser = User.fromFirebaseUser(firebaseUser, [pushToken]);
-      } else if (!userRecord.data['pushToken'].contains(pushToken) && pushToken != null && pushToken != '') {
+      } else if (!userRecord.data['pushToken'].contains(pushToken) &&
+          pushToken != null &&
+          pushToken != '') {
         List<dynamic> list = [];
         list.addAll(userRecord.data['pushToken']);
         list.add(pushToken);
-        await refUsers.document(firebaseUser.uid).updateData(
-            {'pushToken': list});
-      }
-      else
+        await refUsers
+            .document(firebaseUser.uid)
+            .updateData({'pushToken': list});
+      } else
         globals.currentUser = User.fromDocument(userRecord);
     }
-  }}
+  }
+}

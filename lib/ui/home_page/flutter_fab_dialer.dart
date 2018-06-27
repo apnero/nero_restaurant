@@ -89,7 +89,7 @@ class FabMenuMiniItemWidget extends StatelessWidget {
               ),
               child: new FloatingActionButton(
                   elevation: elevation,
-                  mini: true,
+                  mini: false,
                   backgroundColor: fabColor,
                   tooltip: tooltip,
                   child: icon,
@@ -180,10 +180,11 @@ class FabDialerState extends State<FabDialer> with TickerProviderStateMixin {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            new Column(
+            new Container(padding: EdgeInsets.only(right: 16.0,),
+            child: new Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: _fabMenuItems,
-            ),
+            )),
             new Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

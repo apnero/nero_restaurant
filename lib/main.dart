@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
         title: "Nero Restaurant",
         header: new Padding(
           padding: const EdgeInsets.symmetric(vertical: 1.0),
-          child: new Padding(
+          child: new SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: new Image.asset(
               'assets/images/ndm_logo.png',

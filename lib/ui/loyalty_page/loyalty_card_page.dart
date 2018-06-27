@@ -14,7 +14,7 @@ class LoyaltyCardPage extends StatelessWidget {
         appBar: new AppBar(
           title: new Text('Loyalty Card'),
         ),
-        body: new Center(
+        body: new SingleChildScrollView(
             child: new Column(children: <Widget>[
           new QrImage(
             data: globals.currentUser.id,

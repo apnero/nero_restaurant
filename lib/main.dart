@@ -8,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 import 'package:nero_restaurant/ui/loyalty_page/loyalty_card_page.dart';
-
+import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
 void main() => runApp(new NeroRestaurant());
 
 class NeroRestaurant extends StatelessWidget {
@@ -17,13 +17,23 @@ class NeroRestaurant extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Nero Digital',
-      theme: new ThemeData(
+theme: ThemeData(
+//  fontFamily: 'IndieFlower',
         brightness: Brightness.dark,
-      ),
+//        primaryColor: Colors.red,
+//        scaffoldBackgroundColor: Colors.red,
+//        cardColor: Colors.red,
+        dividerColor: Colors.blue,
+//        dialogBackgroundColor: Colors.red,
+//        indicatorColor: Colors.red,
+
+),
+
       home: new LoginPage(title: 'Nero Digital'),
       routes: <String, WidgetBuilder>{
         '/main_order_page': (_) => new MainOrderPage(),
         '/loyalty_card_page': (_) => new LoyaltyCardPage(),
+        '/shopping_cart_page': (_) => new ShoppingCartPage(),
       },
     );
   }
@@ -55,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        _onMessageDialog(context, message);
+        if(message.isNotEmpty) _onMessageDialog(context, message);
         print('on message $message');
       },
       onResume: (Map<String, dynamic> message) {
@@ -118,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: new Image.asset(
               'assets/images/ndm_logo.png',
-              width: 226.0,
+              width: 225.0,
               fit: BoxFit.fitWidth,
             ),
           ),

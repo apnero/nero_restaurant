@@ -4,7 +4,7 @@ import 'package:nero_restaurant/model/category_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nero_restaurant/ui/common/horizontal_list_item.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
-import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
+import 'package:nero_restaurant/services/firebase_calls.dart';
 final refItems = Firestore.instance.collection('Items');
 
 class SubMenuPage extends StatelessWidget {
@@ -17,6 +17,23 @@ class SubMenuPage extends StatelessWidget {
     return new Scaffold(
         appBar: new AppBar(
           title: new Text(category),
+          actions: <Widget>[
+            new IconButton(
+              icon: new Icon(Icons.restaurant_menu),
+              tooltip: 'Menu',
+              onPressed: () => Navigator.pushNamed(context, "/main_order_page"),
+            ),
+            new IconButton(
+              icon: new Icon(Icons.shopping_cart),
+              tooltip: 'Shopping Cart',
+              onPressed: () => Navigator.pushNamed(context, "/shopping_cart_page"),
+            ),
+            new IconButton(
+              icon: new Icon(Icons.card_membership),
+              tooltip: 'Loyalty Card',
+              onPressed: () => Navigator.pushNamed(context, "/loyalty_card_page"),
+            ),
+          ],
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
@@ -51,19 +68,24 @@ class SubMenuPage extends StatelessWidget {
           },
           itemCount: _subCategories.length,
         ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Colors.red,
-        onPressed: () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            new MaterialPageRoute(
-              builder: (context) => new ShoppingCartPage(),
-            ),
-          );
-        }, //animate,
-        tooltip: 'Toggle',
-        child: Icon(Icons.shopping_cart),
-      ),);
+        floatingActionButton: new FutureBuilder<Map<String, double>>(
+            future: FirebaseCalls.getCost(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return FloatingActionButton.extended(
+                    icon: new Icon(Icons.shopping_cart),
+                    key: new ValueKey<Key>(new Key('1')),
+                    label: new Text('\$' +
+                        (snapshot.data['cartPrice'] * 1.0635)
+                            .toStringAsFixed(2)),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, "/shopping_cart_page"));
+              } else if (snapshot.hasError) {
+                return new Text("${snapshot.error}");
+              } else
+                return new Container(
+                  height: 30.0,
+                );
+            }),);
   }
 }

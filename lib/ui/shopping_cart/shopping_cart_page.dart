@@ -5,10 +5,20 @@ import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/common/selection_list_item.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/home_page/home_page.dart';
+import 'package:nero_restaurant/model/selection_price_model.dart';
+import 'package:nero_restaurant/model/item_model.dart';
+import 'package:nero_restaurant/ui/common/pricing_item.dart';
 
 final refSelections = Firestore.instance.collection('Selections');
 
-class ShoppingCartPage extends StatelessWidget {
+
+class ShoppingCartPage extends StatefulWidget {
+  @override
+  _ShoppingCartPageState createState() => new _ShoppingCartPageState();
+}
+
+class _ShoppingCartPageState extends State<ShoppingCartPage> {
+
 
 
   _messageDialog(BuildContext context) {
@@ -81,9 +91,11 @@ class ShoppingCartPage extends StatelessWidget {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    globals.currentCart.clear();
+//    globals.currentCart.clear();
     return new Scaffold(
         appBar: new AppBar(title: new Text('Shopping Cart')),
         body: new StreamBuilder(
@@ -101,15 +113,20 @@ class ShoppingCartPage extends StatelessWidget {
                   width: 255.0,
                   fit: BoxFit.fitHeight,
                 ));
-              return new ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  padding: const EdgeInsets.only(bottom: 2.0, top: 8.0),
-                  itemBuilder: (context, index) => new SelectionListItem(
-                        context: context,
-                        selection: Selection
-                            .fromSelectionDoc(snapshot.data.documents[index]),
-                        fromShoppingPage: true,
-                      ));
+              return Column(children: <Widget>[
+                Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        padding: const EdgeInsets.only(bottom: 2.0, top: 8.0),
+                        itemBuilder: (context, index) => new SelectionListItem(
+                              context: context,
+                              selection: Selection.fromSelectionDoc(
+                                  snapshot.data.documents[index]),
+                              fromShoppingPage: true,
+                            ))),
+               PricingItem(context: context, selectionPriceList: snapshot.data.documents.map<SelectionPrice>((DocumentSnapshot snapshot) {
+                  return SelectionPrice.from(snapshot['selectionId'], Item.getItemFromDocId(snapshot['itemDocId']).price);},
+              ).toList())]);
             }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: new Builder(builder: (BuildContext context) {

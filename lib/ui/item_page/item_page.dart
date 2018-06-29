@@ -97,7 +97,7 @@ class _ItemPageState extends State<ItemPage> {
             style: new TextStyle(fontSize: 32.0),
           ),
           new Padding(
-            padding: EdgeInsets.only(right:20.0, top:3.0,),
+            padding: EdgeInsets.only(right:20.0, top:2.0,),
           child: new Text(
             thisItem.description.replaceAll('\"', ''),
             style: Theme.of(context).textTheme.subhead,
@@ -123,7 +123,7 @@ class _ItemPageState extends State<ItemPage> {
 
   Widget _buildOptions() {
     return new Padding(
-      padding: new EdgeInsets.only(left: 16.0, top: 400.0),
+      padding: new EdgeInsets.only(left: 16.0, top: 410.0),
       child: new ListView.builder(
         itemCount: thisItemOptions.length,
         itemBuilder: (context, index) {

@@ -5,7 +5,7 @@ import 'package:nero_restaurant/ui/item_page/item_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nero_restaurant/model/item_model.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
-
+import 'package:nero_restaurant/model/selection_price_model.dart';
 class SelectionListItem extends StatefulWidget {
   final BuildContext context;
   final Selection selection;
@@ -23,11 +23,11 @@ class _SelectionListItem extends State<SelectionListItem> {
 
   Item thisItem;
 
-  @override
-  void initState() {
-    super.initState();
-  thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
-  }
+//  @override
+//  void initState() {
+//    super.initState();
+//  thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
+//  }
 
   _addToFavorites() {
     if (widget.selection.favorite == false) {
@@ -43,7 +43,11 @@ class _SelectionListItem extends State<SelectionListItem> {
       FirebaseCalls.modifySelection(widget.selection);
     }
 
-    setState(() {});
+    try {
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   _addToCart() {
@@ -58,9 +62,14 @@ class _SelectionListItem extends State<SelectionListItem> {
     }
 
     widget.selection.inCart = true;
+
     FirebaseCalls.modifySelection(widget.selection);
 
-    setState(() {});
+    try {
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   _removeFromCart() {
@@ -120,6 +129,8 @@ class _SelectionListItem extends State<SelectionListItem> {
                     size: 35.0,
                   ))
               : new Container(),
+          widget.fromShoppingPage
+              ? Text('\$'+ thisItem.price.toStringAsFixed(2), style: Theme.of(context).textTheme.subhead,):Container(),
         ]);
   }
 
@@ -197,11 +208,11 @@ class _SelectionListItem extends State<SelectionListItem> {
         ));
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    widget.fromShoppingPage
-        ? globals.currentCart.add(widget.selection.selectionId)
-        : null;
+    thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
     return Card(
         shape: const RoundedRectangleBorder(
             borderRadius: const BorderRadius.only(
@@ -222,6 +233,6 @@ class _SelectionListItem extends State<SelectionListItem> {
             },
             child: new Hero(
                 tag: widget.selection.hashCode.toString(),
-                child: _structure(context))));
+                child: _structure(context)),));
   }
 }

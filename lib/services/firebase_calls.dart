@@ -110,9 +110,18 @@ class FirebaseCalls {
     map.addAll({'date': DateTime.now()});
     map.addAll({'inCart': false});
     Firestore.instance.runTransaction((transaction) async {
-      globals.currentCart.forEach((selectionId) {
-        refSelections.document(selectionId).updateData(map);
-      });
+      FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+
+      await refSelections
+          .where('inCart', isEqualTo: true)
+          .where('uid', isEqualTo: firebaseUser.uid)
+          .getDocuments()
+          .then((querySnapshot) => querySnapshot.documents.forEach((document) =>
+              refSelections.document(document.documentID).updateData(map)));
+
+//      globals.currentCart.forEach((selectionPrice) {
+//        refSelections.document(selectionPrice.selectionId).updateData(map);
+//      });
 
       final DocumentReference document = refSent.document();
       document.setData(<String, dynamic>{
@@ -167,9 +176,36 @@ class FirebaseCalls {
         await refUsers
             .document(firebaseUser.uid)
             .updateData({'pushToken': list});
-
       } else
         globals.currentUser = User.fromDocument(userRecord);
     }
+  }
+
+
+
+  static Future<Map<String,double>> getCost() async {
+    final refSelections = Firestore.instance.collection('Selections');
+    FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+    Map<String,double> map = new Map();
+
+    double sentPrice = 0.0;
+    double cartPrice = 0.0;
+
+    await refSelections
+//        .where('status', isEqualTo: 'working')
+        .where('uid', isEqualTo: firebaseUser.uid)
+        .getDocuments()
+        .then((querySnapshot) => querySnapshot.documents.forEach((document) {
+        if(document['inCart'] == true)
+          cartPrice+= Item.getItemFromDocId(document['itemDocId']).price;
+        if(document['status'] == 'working')
+          sentPrice+= Item.getItemFromDocId(document['itemDocId']).price;
+
+
+    }));
+
+    map.addAll({'sentPrice':sentPrice});
+    map.addAll({'cartPrice': cartPrice});
+    return map;
   }
 }

@@ -95,7 +95,7 @@ class _StructurePageState extends State<StructurePage> {
         child: Container(
             padding: EdgeInsets.all(4.0),
             decoration:const BoxDecoration(
-              color: Colors.blueGrey, //.color,
+              color: Colors.black12, //.color,
             ),
             child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[

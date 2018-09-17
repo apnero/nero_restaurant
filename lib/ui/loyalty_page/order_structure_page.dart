@@ -57,8 +57,20 @@ class _StructurePageState extends State<StructurePage> {
             padding: EdgeInsets.symmetric(vertical: 4.0,),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(Item.getItemFromDocId(selection.itemDocId).name,
-                    style: Theme.of(context).textTheme.subhead,
+                  new Column(
+                    children: <Widget>[
+                      Text(
+                        Item.getItemFromDocId(selection.itemDocId).name,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      Text(
+                        Item
+                            .getItemFromDocId(selection.itemDocId)
+                            .price
+                            .toStringAsFixed(2),
+                        style: Theme.of(context).textTheme.subhead,
+                      ),
+                    ],
                   ),
                   Expanded(
                       child: Center(child: Wrap(

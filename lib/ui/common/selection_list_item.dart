@@ -129,8 +129,7 @@ class _SelectionListItem extends State<SelectionListItem> {
                     size: 35.0,
                   ))
               : new Container(),
-          widget.fromShoppingPage
-              ? Text('\$'+ thisItem.price.toStringAsFixed(2), style: Theme.of(context).textTheme.subhead,):Container(),
+          Text('\$'+ thisItem.price.toStringAsFixed(2), style: Theme.of(context).textTheme.subhead,),
         ]);
   }
 

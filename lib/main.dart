@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
         providers: [
           ProvidersTypes.facebook,
           ProvidersTypes.google,
-          ProvidersTypes.email
+//          ProvidersTypes.email
         ],
       );
     } else {

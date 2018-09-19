@@ -5,8 +5,8 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: ^0.7.2
-  firebase_auth: "^0.5.11"
-  flutter_firebase_ui: "^0.0.6"
+  firebase_auth: "^0.5.20"
+  flutter_firebase_ui: "^0.0.9"
   firebase_messaging: ^1.0.2
   cached_network_image: "^0.4.1+1"
   qr_flutter: ^1.1.1

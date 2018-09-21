@@ -91,7 +91,7 @@ class FirebaseCalls {
         final DocumentSnapshot newDoc =
             await transaction.get(refSelections.document());
         selection.selectionId = newDoc.reference.documentID;
-        await transaction.set(newDoc.reference, selection.toMap());
+        await transaction.update(newDoc.reference, selection.toMap());
       } else {
         //modify one
         final DocumentSnapshot existingDoc = await transaction

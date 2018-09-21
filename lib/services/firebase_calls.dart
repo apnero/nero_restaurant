@@ -81,9 +81,11 @@ class FirebaseCalls {
 
   static void modifySelection(Selection selection) {
     final refSelections = Firestore.instance.collection('Selections');
+    print("i am here flutter me up");
+
     Firestore.instance.runTransaction((transaction) async {
       selection.date = DateTime.now();
-      print("i am here flutter me up");
+
       if (selection.selectionId == '') {
         //new one
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();

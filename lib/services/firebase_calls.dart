@@ -90,11 +90,17 @@ class FirebaseCalls {
         //new one
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
         selection.uid = firebaseUser.uid;
-        final DocumentSnapshot newDoc =
-            await transaction.get(refSelections.document());
-        selection.selectionId = newDoc.reference.documentID;
-        await transaction.set(newDoc.reference, selection.toMap());
-      } else {
+
+        try {
+          final DocumentSnapshot newDoc =
+          await transaction.get(refSelections.document());
+          selection.selectionId = newDoc.reference.documentID;
+          await transaction.set(newDoc.reference, selection.toMap());
+        }
+        catch (error) {
+          print(error);
+        }
+      }  else {
         //modify one
         final DocumentSnapshot existingDoc = await transaction
             .get(refSelections.document(selection.selectionId));

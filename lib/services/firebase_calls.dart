@@ -83,7 +83,7 @@ class FirebaseCalls {
     final refSelections = Firestore.instance.collection('Selections');
     Firestore.instance.runTransaction((transaction) async {
       selection.date = DateTime.now();
-
+      print("i am here flutter me up");
       if (selection.selectionId == '') {
         //new one
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
@@ -91,7 +91,7 @@ class FirebaseCalls {
         final DocumentSnapshot newDoc =
             await transaction.get(refSelections.document());
         selection.selectionId = newDoc.reference.documentID;
-        await transaction.update(newDoc.reference, selection.toMap());
+        await transaction.set(newDoc.reference, selection.toMap());
       } else {
         //modify one
         final DocumentSnapshot existingDoc = await transaction

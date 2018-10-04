@@ -80,10 +80,9 @@ class FirebaseCalls {
   }
 
   static void modifySelection(Selection selection) {
-    final refSelections = Firestore.instance.collection('Selections');
-    print("i am here flutter me up");
+    final CollectionReference refSelections = Firestore.instance.collection('Selections');
 
-    Firestore.instance.runTransaction((transaction) async {
+    Firestore.instance.runTransaction((Transaction transaction) async {
       selection.date = DateTime.now();
 
       if (selection.selectionId == '') {
@@ -91,22 +90,21 @@ class FirebaseCalls {
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
         selection.uid = firebaseUser.uid;
 
-        try {
-          final DocumentSnapshot newDoc =
-          await transaction.get(refSelections.document());
-          selection.selectionId = newDoc.reference.documentID;
-          await transaction.set(newDoc.reference, selection.toMap());
-        }
-        catch (error) {
-          print(error);
-        }
-      }  else {
+        //final DocumentSnapshot newDoc =
+        //    await transaction.get(refSelections.document());
+        //selection.selectionId = newDoc.reference.documentID;
+        //await transaction.set(newDoc.reference, selection.toMap());
+        final DocumentReference docRef = await refSelections.add(selection.toMap());
+        await docRef.updateData({'selectionId': docRef.documentID});
+      } else {
         //modify one
         final DocumentSnapshot existingDoc = await transaction
             .get(refSelections.document(selection.selectionId));
         await transaction.update(existingDoc.reference, selection.toMap());
       }
     });
+
+
   }
 
   static void sendOrder() {
@@ -189,12 +187,10 @@ class FirebaseCalls {
     }
   }
 
-
-
-  static Future<Map<String,double>> getCost() async {
+  static Future<Map<String, double>> getCost() async {
     final refSelections = Firestore.instance.collection('Selections');
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-    Map<String,double> map = new Map();
+    Map<String, double> map = new Map();
 
     double sentPrice = 0.0;
     double cartPrice = 0.0;
@@ -204,15 +200,13 @@ class FirebaseCalls {
         .where('uid', isEqualTo: firebaseUser.uid)
         .getDocuments()
         .then((querySnapshot) => querySnapshot.documents.forEach((document) {
-        if(document['inCart'] == true)
-          cartPrice+= Item.getItemFromDocId(document['itemDocId']).price;
-        if(document['status'] == 'working')
-          sentPrice+= Item.getItemFromDocId(document['itemDocId']).price;
+              if (document['inCart'] == true)
+                cartPrice += Item.getItemFromDocId(document['itemDocId']).price;
+              if (document['status'] == 'working')
+                sentPrice += Item.getItemFromDocId(document['itemDocId']).price;
+            }));
 
-
-    }));
-
-    map.addAll({'sentPrice':sentPrice});
+    map.addAll({'sentPrice': sentPrice});
     map.addAll({'cartPrice': cartPrice});
     return map;
   }

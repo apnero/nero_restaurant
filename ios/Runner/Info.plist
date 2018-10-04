@@ -15,20 +15,23 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb1844323602542989</string>
-			</array>
-		</dict>
+				<string>com.googleusercontent.apps.587358237521-m6uitch5dkslirhvtk8kvkd4g6qt3qtc</string>
+                <string>fb1844323602542989</string>
+            </array>
+        </dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>18</string>
 	<key>FacebookAppID</key>
 	<string>1844323602542989</string>
 	<key>FacebookDisplayName</key>
@@ -61,19 +64,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <!-- Google Sign-in Section -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <!-- TODO Replace this value: -->
-                <!-- Copied from GoogleServices-Info.plist key REVERSE_CLIENT_ID -->
-                <string>com.googleusercontent.apps.587358237521-m6uitch5dkslirhvtk8kvkd4g6qt3qtc</string>
-            </array>
-        </dict>
-    </array>
-    <!-- End of the Google Sign-in Section --></dict>
+</dict>
 </plist>

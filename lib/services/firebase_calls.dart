@@ -80,7 +80,8 @@ class FirebaseCalls {
   }
 
   static void modifySelection(Selection selection) {
-    final CollectionReference refSelections = Firestore.instance.collection('Selections');
+    final CollectionReference refSelections =
+        Firestore.instance.collection('Selections');
 
     Firestore.instance.runTransaction((Transaction transaction) async {
       selection.date = DateTime.now();
@@ -88,13 +89,14 @@ class FirebaseCalls {
       if (selection.selectionId == '') {
         //new one
         FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-        selection.uid = firebaseUser.uid;
+        if (firebaseUser != null) selection.uid = firebaseUser.uid;
 
         //final DocumentSnapshot newDoc =
         //    await transaction.get(refSelections.document());
         //selection.selectionId = newDoc.reference.documentID;
         //await transaction.set(newDoc.reference, selection.toMap());
-        final DocumentReference docRef = await refSelections.add(selection.toMap());
+        final DocumentReference docRef =
+            await refSelections.add(selection.toMap());
         await docRef.updateData({'selectionId': docRef.documentID});
       } else {
         //modify one
@@ -103,8 +105,6 @@ class FirebaseCalls {
         await transaction.update(existingDoc.reference, selection.toMap());
       }
     });
-
-
   }
 
   static void sendOrder() {
@@ -136,16 +136,16 @@ class FirebaseCalls {
       });
     });
   }
-
-  static String getCurrentUserId() {
-    String userId = '';
-    Firestore.instance.runTransaction((transaction) async {
-      FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-      userId = firebaseUser.uid;
-    });
-
-    return userId;
-  }
+//
+//  static String getCurrentUserId() {
+//    String userId = '';
+//    Firestore.instance.runTransaction((transaction) async {
+//      FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+//      userId = firebaseUser.uid;
+//    });
+//
+//    return userId;
+//  }
 
   static Future saveUser(FirebaseUser firebaseUser, String pushToken) async {
     final refUsers = Firestore.instance.collection('Users');
@@ -195,16 +195,19 @@ class FirebaseCalls {
     double sentPrice = 0.0;
     double cartPrice = 0.0;
 
-    await refSelections
+    if (firebaseUser != null)
+      await refSelections
 //        .where('status', isEqualTo: 'working')
-        .where('uid', isEqualTo: firebaseUser.uid)
-        .getDocuments()
-        .then((querySnapshot) => querySnapshot.documents.forEach((document) {
-              if (document['inCart'] == true)
-                cartPrice += Item.getItemFromDocId(document['itemDocId']).price;
-              if (document['status'] == 'working')
-                sentPrice += Item.getItemFromDocId(document['itemDocId']).price;
-            }));
+          .where('uid', isEqualTo: firebaseUser.uid)
+          .getDocuments()
+          .then((querySnapshot) => querySnapshot.documents.forEach((document) {
+                if (document['inCart'] == true)
+                  cartPrice +=
+                      Item.getItemFromDocId(document['itemDocId']).price;
+                if (document['status'] == 'working')
+                  sentPrice +=
+                      Item.getItemFromDocId(document['itemDocId']).price;
+              }));
 
     map.addAll({'sentPrice': sentPrice});
     map.addAll({'cartPrice': cartPrice});

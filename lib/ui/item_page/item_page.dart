@@ -4,7 +4,7 @@ import 'package:nero_restaurant/model/selection_model.dart';
 import 'package:nero_restaurant/ui/item_page/chips_tile.dart';
 import 'package:nero_restaurant/model/item_model.dart';
 import 'package:nero_restaurant/model/options_model.dart';
-import 'package:nero_restaurant/services/firebase_calls.dart';
+//import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/item_page/animated_fab.dart';
 import 'package:nero_restaurant/ui/item_page/diagonal_clipper.dart';
 
@@ -21,13 +21,13 @@ class _ItemPageState extends State<ItemPage> {
   final double _imageHeight = 256.0;
   Item thisItem;
   Map<String, List<String>> thisItemOptions;
-  String uid = '';
+  //String uid = '';
 
   @override
   void initState() {
     thisItem = Item.getItemFromDocId(widget.selection.itemDocId);
     thisItemOptions = Options.getOptionsForThisItem(thisItem.options);
-    uid = FirebaseCalls.getCurrentUserId();
+    //uid = FirebaseCalls.getCurrentUserId();
     super.initState();
   }
 

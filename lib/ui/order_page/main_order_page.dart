@@ -45,11 +45,11 @@ class _MainOrderPageState extends State<MainOrderPage> {
           ),
           title: new Text('Orders'),
           actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.restaurant_menu),
-              tooltip: 'Menu',
-              onPressed: () => Navigator.pushNamed(context, "/main_order_page"),
-            ),
+//            new IconButton(
+//              icon: new Icon(Icons.restaurant_menu),
+//              tooltip: 'Menu',
+//              onPressed: () => Navigator.pushNamed(context, "/main_order_page"),
+//            ),
             new IconButton(
               icon: new Icon(Icons.shopping_cart),
               tooltip: 'Shopping Cart',

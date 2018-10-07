@@ -1,10 +1,16 @@
 import 'dart:math' as math;
 
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/model/selection_model.dart';
+
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
+import 'package:flutter_firebase_ui/flutter_firebase_ui.dart';
 
 class AnimatedFab extends StatefulWidget {
   final Selection selection;
@@ -24,6 +30,13 @@ class _AnimatedFabState extends State<AnimatedFab>
   final double hiddenSize = 20.0;
   bool fav = false;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  StreamSubscription<FirebaseUser> _listener;
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
+  FirebaseUser _currentUser;
+  String pushToken = '';
+
   @override
   void initState() {
     super.initState();
@@ -31,11 +44,17 @@ class _AnimatedFabState extends State<AnimatedFab>
         vsync: this, duration: Duration(milliseconds: 200));
     _colorAnimation = new ColorTween(begin: Colors.pink, end: Colors.pink[800])
         .animate(_animationController);
+    _firebaseMessaging.getToken().then((token) {
+      print(token);
+      pushToken = token;
+    });
+    _checkCurrentUser();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _listener.cancel();
     super.dispose();
   }
 
@@ -176,32 +195,45 @@ class _AnimatedFabState extends State<AnimatedFab>
     String snackBarText = '';
     fav = !fav;
 
-    if (fav == true)
-      snackBarText = 'Added Item To Favorites!';
-    else
-      snackBarText = 'Removed Item From Favorites!';
+    if (_currentUser == null) {
+      snackBarText = 'Please Login First!';
 
-    Scaffold
-        .of(context)
-        .showSnackBar(new SnackBar(content: new Text(snackBarText)));
-
-    if (fav == true) {
-      widget.selection.favorite = true;
-      FirebaseCalls.modifySelection(widget.selection);
+      Scaffold.of(context)
+          .showSnackBar(new SnackBar(content: new Text(snackBarText)));
     } else {
-      widget.selection.favorite = false;
-      FirebaseCalls.modifySelection(widget.selection);
-    }
+      if (fav == true)
+        snackBarText = 'Added Item To Favorites!';
+      else
+        snackBarText = 'Removed Item From Favorites!';
 
+      Scaffold.of(context)
+          .showSnackBar(new SnackBar(content: new Text(snackBarText)));
+
+      if (fav == true) {
+        widget.selection.favorite = true;
+        FirebaseCalls.modifySelection(widget.selection);
+      } else {
+        widget.selection.favorite = false;
+        FirebaseCalls.modifySelection(widget.selection);
+      }
+    }
     close();
   }
 
   _onAddToCartClick() {
-    Scaffold.of(context).showSnackBar(
-        new SnackBar(content: new Text("Item Had Been Added To The Cart!")));
+    String snackBarText = '';
+    if (_currentUser == null) {
+      snackBarText = 'Please Login First!';
 
-    widget.selection.inCart = true;
-    FirebaseCalls.modifySelection(widget.selection);
+      Scaffold.of(context)
+          .showSnackBar(new SnackBar(content: new Text(snackBarText)));
+    } else {
+      Scaffold.of(context).showSnackBar(
+          new SnackBar(content: new Text("Item Had Been Added To The Cart!")));
+
+      widget.selection.inCart = true;
+      FirebaseCalls.modifySelection(widget.selection);
+    }
     close();
   }
 
@@ -225,5 +257,24 @@ class _AnimatedFabState extends State<AnimatedFab>
       ),
     );
     close();
+  }
+
+  void _checkCurrentUser() async {
+    try {
+      _currentUser = await _auth.currentUser();
+      _currentUser?.getIdToken(refresh: true);
+
+      if (_currentUser != null) FirebaseCalls.saveUser(_currentUser, pushToken);
+
+      _listener = _auth.onAuthStateChanged.listen((FirebaseUser user) {
+        setState(() {
+          _currentUser = user;
+          if (_currentUser != null)
+            FirebaseCalls.saveUser(_currentUser, pushToken);
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

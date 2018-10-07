@@ -153,7 +153,7 @@ class _SelectionListItem extends State<SelectionListItem> {
         ),
         child: new Text(
           thisItem.name,
-          style: Theme.of(context).textTheme.headline,
+          style: Theme.of(context).textTheme.title,
         ));
   }
 

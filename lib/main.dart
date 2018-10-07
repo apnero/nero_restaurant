@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_ui/flutter_firebase_ui.dart';
+//import 'package:flutter_firebase_ui/flutter_firebase_ui.dart';
 import 'package:nero_restaurant/ui/home_page/home_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nero_restaurant/services/firebase_calls.dart';
 import 'package:nero_restaurant/ui/order_page/main_order_page.dart';
 import 'package:nero_restaurant/ui/loyalty_page/loyalty_card_page.dart';
 import 'package:nero_restaurant/ui/shopping_cart/shopping_cart_page.dart';
+
 void main() => runApp(new NeroRestaurant());
 
 class NeroRestaurant extends StatelessWidget {
@@ -17,7 +18,7 @@ class NeroRestaurant extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Nero Digital',
-theme: ThemeData(
+      theme: ThemeData(
 //  fontFamily: 'IndieFlower',
         brightness: Brightness.dark,
 //        primaryColor: Colors.red,
@@ -26,9 +27,7 @@ theme: ThemeData(
         dividerColor: Colors.blue,
 //        dialogBackgroundColor: Colors.red,
 //        indicatorColor: Colors.red,
-
-),
-
+      ),
       home: new LoginPage(title: 'Nero Digital'),
       routes: <String, WidgetBuilder>{
         '/main_order_page': (_) => new MainOrderPage(),
@@ -53,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   FirebaseUser _currentUser;
- String pushToken = '';
+  String pushToken = '';
 
   @override
   void initState() {
@@ -65,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        if(message.isNotEmpty) _onMessageDialog(context, message);
+        if (message.isNotEmpty) _onMessageDialog(context, message);
         print('on message $message');
       },
       onResume: (Map<String, dynamic> message) {
@@ -119,29 +118,31 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_currentUser == null) {
-      return new SignInScreen(
-        title: "Nero Restaurant",
-        header: new Padding(
-          padding: const EdgeInsets.symmetric(vertical: 1.0),
-          child: new Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0),
-            child: new Image.asset(
-              'assets/images/ndm_logo.png',
-              width: 225.0,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-        ),
-        providers: [
-          ProvidersTypes.facebook,
-          ProvidersTypes.google,
-//          ProvidersTypes.email
-        ],
-      );
-    } else {
-      return new HomePage();
-    }
+//    if (_currentUser == null) {
+//      return new SignInScreen(
+//        title: "Nero Restaurant",
+//        header: new Padding(
+//          padding: const EdgeInsets.symmetric(vertical: 1.0),
+//          child: new Padding(
+//            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+//            child: new Image.asset(
+//              'assets/images/ndm_logo.jpg',
+//              width: 225.0,
+//              fit: BoxFit.fitWidth,
+//            ),
+//          ),
+//        ),
+//        providers: [
+//          ProvidersTypes.facebook,
+//          ProvidersTypes.google,
+////          ProvidersTypes.email
+//        ],
+//      );
+//    } else {
+//      return new HomePage();
+//    }
+
+    return new HomePage();
   }
 
   void _checkCurrentUser() async {

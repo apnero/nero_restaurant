@@ -42,8 +42,8 @@ class _HorizontalListItem extends State<HorizontalListItem> {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: new Column(children: <Widget>[
                       new Container(
-                          width: 120.0,
-                          height: 120.0,
+                          width: 113.0,
+                          height: 113.0,
                           decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
